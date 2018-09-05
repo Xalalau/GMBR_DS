@@ -1,5 +1,5 @@
 # Variáveis
-VERSAO_DO_PROGRAMA = v2.8.2
+VERSAO_DO_PROGRAMA = v2.8.3
 
 # Nosso conversor
 WRAPPER = comp-wrapper

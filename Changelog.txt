@@ -1,3 +1,6 @@
+v2.8.3 (05/09/2018)
+- Submódulo "Inizator" atualizado.
+
 v2.8.2 (04/09/2018)
 - Correções importantes no README.md;
 - Inizator não usa mais o submódulo "Geral" (estava dando problemas no Windows).
