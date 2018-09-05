@@ -1,3 +1,14 @@
+v2.8.4 (05/09/2018)
+- Mais consertos e mudanças no README.md;
+- Mudanças no makefile:
+⎿ Nova organização dentro da pasta build;
+⎿ A variável "SYSTEM" com valor "LW" não estava sendo processada corretamente na maioria das chamadas;
+⎿ Melhores impressões;
+⎿ Instalação dos módulos estava rodando mais de uma vez desnecessariamente;
+⎿ "clean" estava removendo a pasta "lib" inteira ao invés de limpar cada biblioteca individualmente;
+⎿ "deploy" se transformou no "default";
+⎿ a criação de zips estava adicionando uma pasta extra na estrutura.
+
 v2.8.3 (05/09/2018)
 - Submódulo "Inizator" atualizado.
 

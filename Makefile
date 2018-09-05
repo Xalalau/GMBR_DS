@@ -1,5 +1,5 @@
 # Variáveis
-VERSAO_DO_PROGRAMA = v2.8.3
+VERSAO_DO_PROGRAMA = v2.8.4
 
 # Nosso conversor
 WRAPPER = comp-wrapper
@@ -10,13 +10,12 @@ DIR_RELEASE = release
 DIR_BIBLIOTECAS = lib
 DIR_RECURSOS = res
 DIR_SOURCE = src
+DIR_SERVIDOR = Servidor
 DIR_CONFIGURACOES = ${DIR_RECURSOS}/cfg
 DIR_ICONE = ${DIR_RECURSOS}/icon
 DIR_EXECUTAVEL = ${DIR_RECURSOS}/windows_exes
-DIR_OBJETOS = ${DIR_BUILD}/obj
 DIR_BINARIOS = ${DIR_RELEASE}/bin
 DIR_COMPRESSAO = ${DIR_RELEASE}/zip
-DIR_SERVIDOR = ${DIR_RELEASE}/Servidor
 DIR_BIB_GERAL = ${DIR_BIBLIOTECAS}/Geral
 DIR_BIB_INIZATOR = ${DIR_BIBLIOTECAS}/Inizator
 DIR_BIB_CWRAPPER = ${DIR_BIBLIOTECAS}/Comp-Wrapper
@@ -25,6 +24,10 @@ DIR_BIB_CWRAPPER = ${DIR_BIBLIOTECAS}/Comp-Wrapper
 SRC_GMBRDS = ${DIR_SOURCE}/GMBR_DS.c
 SRC_BIB_GERAL = ${DIR_BIB_GERAL}/src/geral.c
 SRC_BIB_INIZATOR = ${DIR_BIB_INIZATOR}/src/inizator.c
+
+# Quantidade de arquivos dentro de DIR_BIB_CWRAPPER (Se for maior que 0, não há porque rodar a MODULOS)
+BIB_ATUALIZAR_AUX := $(wildcard ${DIR_BIB_CWRAPPER}/*.md)
+BIB_ATUALIZAR := $(words $(BIB_ATUALIZAR_AUX))
 
 # Arquivos objeto
 O_GERAL = geral.o
@@ -63,8 +66,8 @@ else
 		CC32=gcc
 		FLAG32=-m32
 		# Pastas de objetos
-		DIR_OBJETOS64 = ${DIR_OBJETOS}/obj64Lin
-		DIR_OBJETOS32 = ${DIR_OBJETOS}/obj32Lin
+		DIR_OBJETOS64 = ${DIR_BUILD}/obj64Lin
+		DIR_OBJETOS32 = ${DIR_BUILD}/obj32Lin
 	else
 		# Windows
 		ifeq ($(SYSTEM),Windows)
@@ -75,8 +78,8 @@ else
 			CCRES32=i686-w64-mingw32-windres
 			FLAG32=
 			# Pastas de objetos
-			DIR_OBJETOS64 = ${DIR_OBJETOS}/obj64Win
-			DIR_OBJETOS32 = ${DIR_OBJETOS}/obj32Win
+			DIR_OBJETOS64 = ${DIR_BUILD}/obj64Win
+			DIR_OBJETOS32 = ${DIR_BUILD}/obj32Win
 			# Binários extras requisitados
 			WGET=${DIR_EXECUTAVEL}/wget.exe
 			UZIP=${DIR_EXECUTAVEL}/unzip.exe
@@ -120,15 +123,23 @@ DS32 = ${DIR_BINARIOS}/GMBR_DS_32bits${EXT}
 # -------------------
 
 
-# Geral
-default:
-	@echo "[!] Iniciando compilação e empacotamento para Windows e Linux..."
+# Compilar tudo e fazer o deploy
+default: MINGW MODULOS COMPWRAPPER 64bits 32bits
+ifeq ($(SYSTEM),LW)
+	@echo "\n[!] Despachando comando..."
+	$(MAKE) deploy SYSTEM=Linux
+	@echo "\n[!] Despachando comando..."
+	$(MAKE) deploy SYSTEM=Windows
+else
 	$(MAKE) deploy SYSTEM=$(SYSTEM)
+endif
 
 # Criar executável de 64 bits
 64bits: MINGW MODULOS COMPWRAPPER MENSAGEM_64 ${O_GERAL_64} ${O_INIZATOR_64} ${O_GMBRDS_64} ${O_RECURSOS_64}
 ifeq ($(SYSTEM),LW)
+	@echo "\n[!] Despachando comando..."
 	$(MAKE) 64bits SYSTEM=Windows
+	@echo "\n[!] Despachando comando..."
 	$(MAKE) 64bits SYSTEM=Linux
 else
 	${WRAPPER} ${CC64} ${O_GERAL_64} ${O_INIZATOR_64} ${O_GMBRDS_64} ${O_RECURSOS_64} -o ${DS64}
@@ -137,15 +148,45 @@ endif
 # Criar executável de 32 bits
 32bits: MINGW MODULOS COMPWRAPPER MENSAGEM_32 ${O_GERAL_32} ${O_INIZATOR_32} ${O_GMBRDS_32} ${O_RECURSOS_32}
 ifeq ($(SYSTEM),LW)
+	@echo "\n[!] Despachando comando..."
 	$(MAKE) 32bits SYSTEM=Windows
+	@echo "\n[!] Despachando comando..."
 	$(MAKE) 32bits SYSTEM=Linux
 else
 	${WRAPPER} ${CC32} ${O_GERAL_32} ${O_INIZATOR_32} ${O_GMBRDS_32} ${O_RECURSOS_32} -o ${DS32} ${FLAG32}
 endif
 
-# Criar a pasta Servidor completa e fazer um zip dela
-deploy: 64bits 32bits
-	@echo "\n[!] Deploy na pasta "${DIR_SERVIDOR}" + arquivo \"${SYSTEM}_GMBR_DS_${VERSAO_DO_PROGRAMA}.zip\"..."
+# Limpar todos os arquivos produzidos na compilação
+clean:
+ifeq "$(wildcard $(DIR_BIB_GERAL)/src )" "$(DIR_BIB_GERAL)/src"
+	rm -r ${DIR_BIB_GERAL}/*
+	rm -r ${DIR_BIB_GERAL}/.git
+endif
+ifeq "$(wildcard $(DIR_BIB_INIZATOR)/src )" "$(DIR_BIB_INIZATOR)/src"
+	rm -r ${DIR_BIB_INIZATOR}/*
+	rm -r ${DIR_BIB_INIZATOR}/.git
+endif
+ifeq "$(wildcard $(DIR_BIB_CWRAPPER)/src )" "$(DIR_BIB_CWRAPPER)/src"
+	rm -r ${DIR_BIB_CWRAPPER}/*
+	rm -r ${DIR_BIB_CWRAPPER}/.git
+endif
+ifeq "$(wildcard $(DIR_BUILD) )" "$(DIR_BUILD)"
+	rm -r ${DIR_BUILD}
+endif
+ifeq "$(wildcard $(DIR_RELEASE) )" "$(DIR_RELEASE)"
+	rm -r ${DIR_RELEASE}
+endif
+
+
+# --------------------
+# Chamadas secundárias
+# --------------------
+# Ignore toda essa seção
+
+
+# Fechar o pacote do GMBR DS
+deploy: 
+	@echo "\n[!] Deploy na pasta \"${DIR_SERVIDOR}\" + arquivo \"${SYSTEM}_GMBR_DS_${VERSAO_DO_PROGRAMA}.zip\"..."
 	mkdir -p ${DIR_SERVIDOR}/cfg
 ifeq ($(SYSTEM),Windows)
 	mkdir ${DIR_SERVIDOR}/bin
@@ -163,63 +204,60 @@ endif
 	cp ${DIR_RECURSOS}/LEIAME.txt ${DIR_SERVIDOR}
 	if [ ! -d ${DIR_COMPRESSAO} ]; then mkdir ${DIR_COMPRESSAO}; fi
 	zip -r ${SYSTEM}_GMBR_DS_${VERSAO_DO_PROGRAMA}.zip ${DIR_SERVIDOR}
-	rm -r ${DIR_BINARIOS}
+	rm -r ${DIR_SERVIDOR}
 	mv ${SYSTEM}_GMBR_DS_${VERSAO_DO_PROGRAMA}.zip ${DIR_COMPRESSAO}
-
-# Limpar todos os arquivos produzidos na compilação
-clean:
-ifeq "$(wildcard $(DIR_BIBLIOTECAS) )" "$(DIR_BIBLIOTECAS)"
-	rm -r ${DIR_BIBLIOTECAS}
-endif
-ifeq "$(wildcard $(DIR_BUILD) )" "$(DIR_BUILD)"
-	rm -r ${DIR_BUILD}
-endif
-ifeq "$(wildcard $(DIR_RELEASE) )" "$(DIR_RELEASE)"
-	rm -r ${DIR_RELEASE}
-endif
-
-
-# --------------------
-# Chamadas secundarias
-# --------------------
-# Ignore essa seção
-
 
 # Lidar com 64 bits
 MENSAGEM_64:
+ifneq ($(SYSTEM),LW)
 	@echo "\n[!] Compilando GMBR DS 64 bits para ${SYSTEM}..."
+endif
 
 ${O_RECURSOS_64}: ${RECURSOS}
+ifneq ($(SYSTEM),LW)
 	${WRAPPER} ${CCRES64} ${RECURSOS} -O coff -o ${O_RECURSOS_64}
+endif
 
 ${O_GERAL_64}: ${SRC_BIB_GERAL}
+ifneq ($(SYSTEM),LW)
 	${WRAPPER} ${CC64} ${DIR_OBJETOS64} -c ${SRC_BIB_GERAL}
+endif
 
 ${O_INIZATOR_64}: ${SRC_BIB_INIZATOR}
+ifneq ($(SYSTEM),LW)
 	${WRAPPER} ${CC64} ${DIR_OBJETOS64} -c ${SRC_BIB_INIZATOR}
+endif
 
 ${O_GMBRDS_64}: ${SRC_GMBRDS}
+ifneq ($(SYSTEM),LW)
 	${WRAPPER} ${CC64} ${DIR_OBJETOS64} -c ${SRC_GMBRDS}
-
+endif
 
 # Lidar com 32 bits
 MENSAGEM_32:
+ifneq ($(SYSTEM),LW)
 	@echo "\n[!] Compilando GMBR DS 32 bits para ${SYSTEM}..."
+endif
 
 ${O_GERAL_32}: ${SRC_BIB_GERAL}
+ifneq ($(SYSTEM),LW)
 	${WRAPPER} ${CC32} ${DIR_OBJETOS32} -c ${SRC_BIB_GERAL} ${FLAG32}
+endif
 
 ${O_INIZATOR_32}: ${SRC_BIB_INIZATOR}
+ifneq ($(SYSTEM),LW)
 	${WRAPPER} ${CC32} ${DIR_OBJETOS32} -c ${SRC_BIB_INIZATOR} ${FLAG32}
+endif
 
 ${O_GMBRDS_32}: ${SRC_GMBRDS}
+ifneq ($(SYSTEM),LW)
 	${WRAPPER} ${CC32} ${DIR_OBJETOS32} -c ${SRC_GMBRDS} ${FLAG32}
+endif
 
 ${O_RECURSOS_32}: ${RECURSOS}
+ifneq ($(SYSTEM),LW)
 	${WRAPPER} ${CCRES32} ${RECURSOS} -O coff -o ${O_RECURSOS_32}
-
-
-# Instalacao de requisitos
+endif
 
 # Crosscompiler
 MINGW:
@@ -235,6 +273,7 @@ endif
 
 # Módulos do GMBR DS
 MODULOS:
+ifeq ($(BIB_ATUALIZAR), 0)
 ifndef GIT_CHECK
 ifndef APT_CHECK
 	$(error "\nInstale o Git para poder usar esse makefile!\n")
@@ -244,6 +283,7 @@ endif
 endif
 	@echo "\n[!] Baixando módulos..."
 	git submodule update --init
+endif
 
 # Instalar o comp-wrapper
 COMPWRAPPER:
