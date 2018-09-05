@@ -1,9 +1,0 @@
-Abrir sv:
-~/Servidor/gmodds/srcds_run -game garrysmod +maxplayers 10 -console -authkey 5152D72CAFC8836BE6FFFC17AA374AB9 +host_workshop_collection 163399147 +map gm_xalcity
-
-Atualizar ou instalar sv:
-~/Servidor/steamcmd/steamcmd.sh +login anonymous +force_install_dir ../gmodds +app_update 4020 validate +quit
-
-
-!lagstats
-
