@@ -1,5 +1,5 @@
 # Variáveis
-VERSAO_DO_PROGRAMA = v2.8.1
+VERSAO_DO_PROGRAMA = v2.8.2
 
 # Nosso conversor
 WRAPPER = comp-wrapper
@@ -243,7 +243,7 @@ endif
 	sudo apt install git -y
 endif
 	@echo "\n[!] Baixando módulos..."
-	git submodule update --init --recursive
+	git submodule update --init
 
 # Instalar o comp-wrapper
 COMPWRAPPER:

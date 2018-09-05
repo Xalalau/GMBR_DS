@@ -10,7 +10,7 @@ Programa para instalação de servidores dedicados de Garry's Mod ([Página ofic
 Para compilar no seu sistema, clone o repositório, entre na pasta do projeto e dê build pelo make:
 
 ```sh
-$ git clone https://github.com/xalalau/GMod.git
+$ git clone https://github.com/xalalau/GMBR_DS.git
 $ cd ~/GMod/GMBR_DS/
 $ make
 ````
@@ -46,17 +46,27 @@ Sairá o executável de 64 bits para Windows na pasta "release/bin".
 
 **WINDOWS**
 
-Aqui eu uso o CodeBlocks para compilar e nesse ponto faço o posicionamento dos arquivos manualmente mesmo, fica assim:
+Infelizmente eu fiz o GMBR DS para ser totalmente compilado no Linux, então o método aqui acaba sendo altamente manual.
 
-- [Baixe o código do GMBR DS](https://github.com/xalalau/GMod/archive/master.zip) e extraia ele em um local qualquer (Vamos usar **C:\GMBR-DS**);
-- Crie a pasta lib na pasta do GMBR DS (**C:\GMBR-DS\lib**);
-- Baixe a [Xalateca](https://github.com/xalalau/Xalateca) e a extraia na pasta "lib" do GMBR DS (**C:\GMBR-DS\lib\Xalateca**);
-- Baixe e instale o [CodeBlocks](http://www.codeblocks.org/downloads/26) versão **mingw**;
-- Abra o CodeBlocks e crie um novo **Pojeto de Console**;
-- Passe o "Build target" do projeto para **Release** e cheque nas configurações se o GCC está configurado para **32 bits**;
-- Na árvore de arquivos, delete o "main.c" e mande inlcuir recursivamente os arquivos do GMBR DS a partir de **C:\GMBR-DS** marcando para inclusão apenas os arquivos importantes, os **.c** e o **.rc**;
+No Windows eu uso o Git CMD para baixar os repositórios, o Code::Blocks com mingw para compilar e depois pego o restante dos arquivos os copiando mesmo. Fica assim:
+
+- Instalar [Git](https://git-scm.com/download/win);
+- Abrir o Git CMD;
+- Colocar:
+
+```sh
+cd C:\
+git clone https://github.com/xalalau/GMBR_DS.git
+git submodule update --init
+```
+
+- Baixar e instalar o [Code::Blocks](http://www.codeblocks.org/downloads/26) versão **mingw**;
+- No Code::Blocks criar um novo projeto **Console application** em C, com dados de nome/local genéricos e modo Degub/Release ativados;
+- Passar o "Build target" para **Release**;
+- Na árvore de arquivos, deletar o "main.c" e mande **incluir recursivamente** os arquivos de "C:\GMBR_DS" a partir de **C:\GMBR_DS**  (Aceitar os **.c**, **.h** e **.rc**);
 - Na árvore de arquivos, abra o GMBR_DS.c;
-- Mande compilar;
-- Pronto! O executável vai aparecer na pasta **release** do seu projeto.
-
-Me desculpem por isso ainda não ser automatizado. Eu programo o GMBR DS no Linux.
+- Mande compilar em "Build -> Build";
+- O executável vai aparecer na pasta **release** do seu projeto. Renomeie-o corretamente;
+- Agora para compilar em 64 bits, faça esses [passos](https://medium.com/@yzhong.cs/code-blocks-compile-64-bit-under-windows-with-mingw-w64-79101f5bbc02) e repita o Build;
+- Coloque os executáveis 32 e 64 bits dentro da pasta do GMBR DS;
+- Pronto! Uma bela volta gigante.

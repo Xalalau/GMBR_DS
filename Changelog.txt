@@ -1,3 +1,10 @@
+v2.8.2 (04/09/2018)
+- Correções importantes no README.md;
+- Inizator não usa mais o submódulo "Geral" (estava dando problemas no Windows).
+
+v2.8.1 (04/09/2018)
+- [v2.8.1] Correção no carregamento de submódulos
+
 v2.8 (04/09/2018)
 - GMBR DS movido para repositório próprio (Versões passadas descartadas. Deal with it);
 - Versionamento está diferente, nada mais de updates gigantes de uma vez só;

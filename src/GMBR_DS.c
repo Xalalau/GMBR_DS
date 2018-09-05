@@ -554,7 +554,7 @@ int exibirTelaInicial() {
 		printf("Feito por Xalalau - Garry s Mod Brasil, GMBR\n");
 		printf("http://www.gmbrblog.blogspot.com.br/\n");
 		printf("http://mrxalalau.blogspot.com.br/\n");
-		printf("___________________________________________________________________[v2.8.1]\n");
+		printf("___________________________________________________________________[v2.8.2]\n");
 		printf("\n");
 
 		/* MENU PRINCIPAL
