@@ -1,3 +1,12 @@
+v2.8.5 (05/09/2018)
+- url errada corrigida no cabeçalho;
+- Certas impressões de texto foram adaptadas para ficarem boas no Windows (eram caracteres especiais);
+- O arquivo cfg.ini do Windows foi separado do do Linux de novo devido a um campo com valor diferente;
+- Pequena limpeza em warnings;
+- Erros dentro das opções de menu não vão mais fechar o programa;
+- Inizator atualizado;
+- "Correção" do formato de arquivo para o Linux.
+
 v2.8.4 (05/09/2018)
 - Mais consertos e mudanças no README.md;
 - Mudanças no makefile:

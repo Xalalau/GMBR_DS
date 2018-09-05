@@ -1,9 +1,9 @@
 /*
- * 
+ *
  * por Xalalau Xubilozo
- * https://github.com/xalalau/GMod/tree/master/Xala's%20Movie%20Helper
+ * https://github.com/xalalau/GMBR_DS
  * Licença: MIT
- * 
+ *
  */
 
 #include "../lib/Geral/src/geral.h"
@@ -88,7 +88,7 @@ void ajustarConfiguracoesBasicas() {
 
 	strcpy(cfg.steam.arquivo_bibliotecas, "libraryfolders.vdf");
 	strcpy(cfg.steam.aviso_nao_encontrado, "NAO ENCONTRADA!");
-	
+
 	strcpy(cfg.gmod.nome, "Garry's Mod");
 	strcpy(cfg.gmod.id, "4020");
 	strcpy(cfg.gmod.arquivo_mount, "mount.cfg");
@@ -224,7 +224,7 @@ int encontrarSteam() {
 					if (geral_verificarExistencia(strcat(strcat(strcat(strcpy(temp, unidade[i]), pasta[j]), BARRA), cfg.steam.arquivo_achar)))
 						strcpy(ini_buscar(cfg.parametros, "", "pasta_steam"), strcat(strcpy(temp, unidade[i]), pasta[j]));
 		}
-		
+
 		// Caso eu não a encontre, salvo uma mensagem de erro em "pasta_steam"
 		if (strcmp(ini_buscar(cfg.parametros, "", "pasta_steam"),"") == 0)
 			ini_alterar(cfg.parametros, "", "pasta_steam", cfg.steam.aviso_nao_encontrado);
@@ -307,7 +307,7 @@ void ajustarVariaveis() {
 	// Define o caminho para o arquivo de montagem de contents do GMod
 	strcat(strcat(strcat(strcat(strcat(strcat(strcpy(temp, ini_buscar(cfg.parametros, "", "pasta_servidor")), BARRA), "garrysmod"), BARRA), "cfg"), BARRA), cfg.gmod.arquivo_mount);
 	strcpy(cfg.gmod.arquivo_mount, temp);
-	
+
 	printf("[GMBR DS] Variaveis reajustadas\n");
 }
 
@@ -319,7 +319,7 @@ int buscarBibliotecas() {
 	// Checa se o Steam foi encontrado anteriormente
 	if (strcmp(ini_buscar(cfg.parametros, "", "pasta_steam"), cfg.steam.aviso_nao_encontrado) != 0) {
 		// Sim
-		
+
 		FILE *fp;
 		int i = 0, j = 0;
 		char c, caracteres[MAX_CHAR_DIR];
@@ -419,16 +419,16 @@ int validarContents() {
 	// Checo os contents um por um
 	while ((*contents).proxima_secao != NULL) {
 		i++;
-		
+
 		// Opção
 		strcpy(opcao, ini_buscar(cfg.contents, (*contents).secao, "opcao"));
-		
+
 		// Validação de contents do tipo 1
 		if (strcmp(opcao, "1") == 0) {
 			char login[30];
 
 			strcpy(login, ini_buscar(cfg.contents, (*contents).secao, "login"));
-			
+
 			contagem_de_contents++;
 
 			// Checa se o content foi marcado para download mesmo não podendo ser baixado
@@ -554,7 +554,7 @@ int exibirTelaInicial() {
 		printf("Feito por Xalalau - Garry s Mod Brasil, GMBR\n");
 		printf("http://www.gmbrblog.blogspot.com.br/\n");
 		printf("http://mrxalalau.blogspot.com.br/\n");
-		printf("___________________________________________________________________[v2.8.4]\n");
+		printf("___________________________________________________________________[v2.8.5]\n");
 		printf("\n");
 
 		/* MENU PRINCIPAL
@@ -646,11 +646,11 @@ void exibirConfiguracoes() {
 	printf("CONFIGURACOES CARREGADAS:\n");
 	printf("______________________________________________________________________________\n");
 	printf("\n");
-	printf(" ______\n");
+
 
 	// Pastas, no geral
-	printf("[PASTAS]\n");
-	printf(" ‾‾‾‾‾‾\n");
+	printf(" ______\n");
+	printf("[PASTAS]\n\n");
 	printf("  Base:\n");
 	printf("    ");
 	for (i = 0; i < strlen(cfg.diretorio_base) - 1; i++) /* Tiro a barra no final */
@@ -663,22 +663,19 @@ void exibirConfiguracoes() {
 	// Bibliotecas do Steam (Caso existam)
 	if (cfg.steam.libs.quantidade > 0) {
 		printf(" ____________________\n");
-		printf("[BIBLIOTECAS DO STEAM]\n");
-		printf(" ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n");
+		printf("[BIBLIOTECAS DO STEAM]\n\n");
 		for (i = 0; i < cfg.steam.libs.quantidade; i++)
 			printf("  [%d] %s\n", i + 1, cfg.steam.libs.biblioteca[i]);
 	}
 
 	// Arquivos que serão baixados
 	printf(" ________\n");
-	printf("[DOWNLOAD]\n");
-	printf(" ‾‾‾‾‾‾‾‾\n");
+	printf("[DOWNLOAD]\n\n");
 	printf("  SteamCMD:\n    %s\n", ini_buscar(cfg.parametros, "", "download_steamcmd"));
 
 	// Arquivos importantes para o GMBR DS
 	printf(" ________\n");
-	printf("[ARQUIVOS]\n");
-	printf(" ‾‾‾‾‾‾‾‾\n");
+	printf("[ARQUIVOS]\n\n");
 	printf("  Configuracoes gerais do GMBR DS:\n    %s\n", cfg.inis.geral);
 	printf("  Configuracao de contents do GMBR DS:\n    %s\n", cfg.inis.contents);
 	printf("  Montagem de contents do GMod:\n    %s\n", cfg.gmod.arquivo_mount);
@@ -687,13 +684,11 @@ void exibirConfiguracoes() {
 
 	// GMod + Informações sobre cada content
 	printf(" ________________________________________________\n");
-	printf("[INFORMACAO DO SERVIDOR E DOS CONTENTS CARREGADOS]\n");
-	printf(" ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n");
+	printf("[INFORMACAO DO SERVIDOR E DOS CONTENTS CARREGADOS]\n\n");
 	printf("    ___________\n");
 	printf("  + %s\n", cfg.gmod.nome );
 	printf("    pasta = %s\n", ini_buscar(cfg.parametros, "", "pasta_servidor"));
-	printf("    id = %s\n", cfg.gmod.id);
-	printf("    ‾‾‾‾‾‾‾‾‾‾‾\n");
+	printf("    id = %s\n\n", cfg.gmod.id);
 	contents = cfg.contents;
 	while ((*contents).proxima_secao != NULL) {
 		if (strcmp(ini_buscar(contents, (*contents).secao, "opcao"), "3") != 0) {
@@ -715,8 +710,7 @@ void exibirConfiguracoes() {
 
 	// O comando para abrir o servidor via terminal (por completo)
 	printf(" ___________________\n");
-	printf("[COMANDO DO SERVIDOR]\n");
-	printf(" ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n");
+	printf("[COMANDO DO SERVIDOR]\n\n");
 	printf("    '%s' %s\n", cfg.steam.arquivo_srcds, ini_buscar(cfg.parametros, "", "comando_sv"));
 	printf("\n");
 
@@ -724,7 +718,7 @@ void exibirConfiguracoes() {
 	printf("______________________________________________________________________________\n");
 	printf("\n");
 	printf("\n");
-			
+
 	geral_pausar();
 }
 
@@ -749,7 +743,7 @@ int criarPastasBase() {
 		// Pasta dos contents
 		else if (j == 4)
 			strcpy(temp, ini_buscar(cfg.parametros, "", "pasta_contents"));
-	
+
 		// Tenta criar a pasta
 		if ((retorno = geral_criarPasta(temp)) == 1)
 			printf("[GMBR DS] Pasta criada: '%s'\n", temp);
@@ -764,7 +758,7 @@ int criarPastasBase() {
 			return 0;
 		}
 	}
-	
+
 	return 1;
 }
 
@@ -782,7 +776,7 @@ int criarPastasDosContents() {
 		// Está marcado para instalação?
 		if (strcmp(ini_buscar(contentsAux, (*contentsAux).secao, "opcao"), "1") == 0) {
 			// Sim
-			
+
 			// Pego a pasta do content
 			strcpy(temp, ini_buscar(contentsAux, (*contentsAux).secao, "pasta"));
 
@@ -802,7 +796,7 @@ int criarPastasDosContents() {
 		// Próximo content
 		contentsAux = (*contentsAux).proxima_secao;
 	}
-	
+
 	return 1;
 }
 
@@ -814,8 +808,8 @@ int instalarSteamCMD() {
 	// Verifica se existe o executável do SteamCMD
 	if ( ! geral_verificarExistencia(cfg.steam.arquivo_steamcmd)) {
 		// Não
-		
-		char array[300], *partes, *parte_certa, barra[2]="/";
+
+		char array[300], *partes, *parte_certa="", barra[2]="/";
 		char arquivo[30], comando_download[300], comando_extrair[300];
 
 		printf("\n[GMBR DS] Baixando SteamCMD em '%s'...\n\n", ini_buscar(cfg.parametros, "", "pasta_steamcmd"));
@@ -886,7 +880,7 @@ int instalarAtualizarAux(char id[], char pasta[], char login[]) {
 	// 1 = Instalação bem sucedida, 0 = Erro
 
 	char parte[12], comando[300];
-	
+
 	// Crio o comando para instalar/atualizar o servidor/contents
 	if (strcmp(SISTEMA,"Linux") == 0)
 		strcpy(parte, "\" && \"");
@@ -905,7 +899,7 @@ int instalarAtualizarAux(char id[], char pasta[], char login[]) {
 
 		return 0;
 	}
-	
+
 	return 1;
 }
 
@@ -913,7 +907,7 @@ int instalarAtualizarSv() {
 	// Instalação/Atualização do servidor de GMod
 	// Retorno:
 	// 1 = Instalação bem sucedida, 0 = Erro
-	
+
 	char pasta[MAX_CHAR_DIR];
 
 	printf("[GMBR DS] Instalando/atualizando '%s'...\n\n", cfg.gmod.nome);
@@ -924,7 +918,7 @@ int instalarAtualizarSv() {
 	// Instalação
 	if ( ! instalarAtualizarAux(cfg.gmod.id, pasta, "anonymous"))
 		return 0;
-	
+
 	return 1;
 }
 
@@ -935,7 +929,7 @@ int instalarAtualizarContents() {
 
 	ini* contentsAux = cfg.contents;
 	char login[30], pasta[MAX_CHAR_DIR], id[10];
-	
+
 	while ((*contentsAux).proxima_secao != NULL) {
 		if (strcmp(ini_buscar(contentsAux, (*contentsAux).secao, "opcao"), "1") == 0) {
 
@@ -985,10 +979,10 @@ int montarContents() {
 		return 0;
 	} else {
 		// Sim
-		
+
 		// Removo o arquivo de montagem
 		remove(cfg.gmod.arquivo_mount);
-		
+
 		// Vou criar um novo
 		fp = fopen(cfg.gmod.arquivo_mount, "w");
 
@@ -1031,7 +1025,7 @@ int montarContents() {
 }
 
 void ligarServer() {
-	// Envio o comando de abertura do servidor 
+	// Envio o comando de abertura do servidor
 	// Retorno:
 	// 1 = OK, 0 = Erro
 
@@ -1058,8 +1052,7 @@ void finalizarOpcao() {
 	printf(" ___________________________________\n");
 	printf("|                                   |\n");
 	printf("|    [GMBR DS] Opcao finalizada.    |\n");
-	printf("|                                   |\n");
-	printf(" ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n");
+	printf("|                                   |\n\n");
 
 	geral_pausar();
 }
@@ -1074,10 +1067,7 @@ void sair() {
 	exit(0);
 }
 
-void main() {
-	int retorno;
-	char temp[MAX_CHAR_DIR];
-
+int main() {
 	// Limpar a tela
 	CLRSCR;
 
@@ -1127,8 +1117,9 @@ void main() {
 					( ! instalarSteamCMD()) ||
 					( ! instalarAtualizarSv()) ||
 					( ! montarContents()))
-					sair();
-				finalizarOpcao();
+					finalizarOpcao();
+				else
+					finalizarOpcao();
 			break;
 			// Instalar/atualizar contents
 			case 3:
@@ -1137,8 +1128,9 @@ void main() {
 					( ! instalarSteamCMD()) ||
 					( ! instalarAtualizarContents()) ||
 					( ! montarContents()))
-					sair();
-				finalizarOpcao();
+					finalizarOpcao();
+				else
+					finalizarOpcao();
 			break;
 			// Instalar/atualizar servidor de GMod e contents
 			case 4:
@@ -1148,8 +1140,9 @@ void main() {
 					( ! instalarAtualizarSv()) ||
 					( ! instalarAtualizarContents()) ||
 					( ! montarContents()))
-					sair();
-				finalizarOpcao();
+					finalizarOpcao();
+				else
+					finalizarOpcao();
 			break;
 			// Ligar servidor
 			case 5:
@@ -1159,8 +1152,7 @@ void main() {
 			break;
 			// Forçar montagem de contents
 			case 6:
-				if ( ! montarContents())
-					sair();
+				montarContents();
 				finalizarOpcao();
 			break;
 		}
@@ -1168,4 +1160,6 @@ void main() {
 		// Reiniciando ciclo da escolha
 		escolha = -1;
 	}
+
+	return 0;
 }

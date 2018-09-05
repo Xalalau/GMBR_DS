@@ -1,5 +1,5 @@
 # Variáveis
-VERSAO_DO_PROGRAMA = v2.8.4
+VERSAO_DO_PROGRAMA = v2.8.5
 
 # Nosso conversor
 WRAPPER = comp-wrapper
@@ -199,7 +199,7 @@ ifeq ($(SYSTEM),Linux)
 	cp ${DS32} ${DIR_SERVIDOR}
 endif
 endif
-	cp ${DIR_CONFIGURACOES}/cfg.ini ${DIR_SERVIDOR}/cfg/cfg.ini
+	cp ${DIR_CONFIGURACOES}/cfg${SYSTEM}.ini ${DIR_SERVIDOR}/cfg/cfg.ini
 	cp ${DIR_CONFIGURACOES}/contents${SYSTEM}.ini ${DIR_SERVIDOR}/cfg/contents.ini
 	cp ${DIR_RECURSOS}/LEIAME.txt ${DIR_SERVIDOR}
 	if [ ! -d ${DIR_COMPRESSAO} ]; then mkdir ${DIR_COMPRESSAO}; fi
