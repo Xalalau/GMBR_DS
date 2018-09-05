@@ -50,9 +50,9 @@ Infelizmente eu fiz o GMBR DS para ser totalmente compilado no Linux, então o m
 
 No Windows eu uso o Git CMD para baixar os repositórios, o Code::Blocks com mingw para compilar e depois pego o restante dos arquivos os copiando mesmo. Fica assim:
 
-- Instalar [Git](https://git-scm.com/download/win);
-- Abrir o Git CMD;
-- Colocar:
+- Instale o [Git](https://git-scm.com/download/win);
+- Abra o Git CMD;
+- Coloque:
 
 ```sh
 cd C:\
@@ -60,13 +60,13 @@ git clone https://github.com/xalalau/GMBR_DS.git
 git submodule update --init
 ```
 
-- Baixar e instalar o [Code::Blocks](http://www.codeblocks.org/downloads/26) versão **mingw**;
-- No Code::Blocks criar um novo projeto **Console application** em C, com dados de nome/local genéricos e modo Degub/Release ativados;
-- Passar o "Build target" para **Release**;
-- Na árvore de arquivos, deletar o "main.c" e mande **incluir recursivamente** os arquivos de "C:\GMBR_DS" a partir de **C:\GMBR_DS**  (Aceitar os **.c**, **.h** e **.rc**);
+- Baixe e instale o [Code::Blocks](http://www.codeblocks.org/downloads/26) versão **mingw**;
+- No Code::Blocks crie um novo projeto **Console application** em C (dados de nome e local genéricos) (modo Degub e Release ativados);
+- Passe o "Build target" para **Release**;
+- Na árvore de arquivos, delete o "main.c" e mande **incluir recursivamente** os arquivos de "C:\GMBR_DS" (Aceitar os **.c**, **.h** e **.rc**);
 - Na árvore de arquivos, abra o GMBR_DS.c;
 - Mande compilar em "Build -> Build";
 - O executável vai aparecer na pasta **release** do seu projeto. Renomeie-o corretamente;
-- Agora para compilar em 64 bits, faça esses [passos](https://medium.com/@yzhong.cs/code-blocks-compile-64-bit-under-windows-with-mingw-w64-79101f5bbc02) e repita o Build;
+- Agora, para compilar em 64 bits, faça esses [passos](https://medium.com/@yzhong.cs/code-blocks-compile-64-bit-under-windows-with-mingw-w64-79101f5bbc02) e repita o Build;
 - Coloque os executáveis 32 e 64 bits dentro da pasta do GMBR DS;
 - Pronto! Uma bela volta gigante.
