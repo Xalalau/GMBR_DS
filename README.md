@@ -36,7 +36,7 @@ Notas:
 1) A omissão da REGRA fará o make escolher "deploy";
 2) A omissão do SYSTEM fará o make criar executáveis para o seu sistema atual.
 
-Dois exemplos:
+Exemplo:
 
 ```sh
 $ make 64bits SYSTEM=Windows
