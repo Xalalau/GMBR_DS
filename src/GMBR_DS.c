@@ -6,6 +6,8 @@
  *
  */
 
+#define VERSAO_DS "v.Git" /* Versão ! */
+
 #include "../lib/Geral/src/geral.h"
 #include "../lib/Inizator/src/inizator.h"
 
@@ -548,7 +550,7 @@ int exibirTelaInicial() {
 		printf("Feito por Xalalau - Garry s Mod Brasil, GMBR\n");
 		printf("http://www.gmbrblog.blogspot.com.br/\n");
 		printf("http://mrxalalau.blogspot.com.br/\n");
-		printf("___________________________________________________________________[v2.8.5]\n");
+		printf("___________________________________________________________________[%s]\n", VERSAO_DS);
 		printf("\n");
 
 		/* MENU PRINCIPAL

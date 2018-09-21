@@ -15,7 +15,7 @@ BEGIN
       VALUE "LegalCopyright", "Xalalau Xubilozo"
       VALUE "OriginalFilename", "GMBRDS"
       VALUE "ProductName", "Garry's Mod Brasil Dedicated Server"
-      VALUE "ProductVersion", "2.8.5"
+      VALUE "ProductVersion", "Git"
     END
   END
 
