@@ -32,8 +32,8 @@
 
 // Arquivos .ini
 struct inis_ {
-	char geral[MAX_CHAR_DIR]; /* Caminho até o cfg.ini */
-	char contents[MAX_CHAR_DIR]; /* Caminho até o contents.ini */
+	char geral[MAX_CHAR_DIR]; /* Caminho até o cfg.no */
+	char contents[MAX_CHAR_DIR]; /* Caminho até o contents.no */
 };
 
 // Garry's Mod
@@ -62,9 +62,9 @@ struct steam_ {
 // Estrutura principal de controle
 struct config_ {
 	char diretorio_base[MAX_CHAR_DIR]; /* Caminho até o diretório corrente */
-	char secao[4][9]; /* Nome das seções no arquivo cfg.ini */
-	ini *parametros; /* Estrutura do cfg.ini carregada */
-	ini *contents; /* Estrutura do contents.ini carregada */
+	char secao[4][9]; /* Nome das seções no arquivo cfg.no */
+	no *parametros; /* Estrutura do cfg.ini carregada */
+	no *contents; /* Estrutura do contents.ini carregada */
 	struct inis_ inis;
 	struct gmod_ gmod;
 	struct steam_ steam;
@@ -100,7 +100,7 @@ int obterPastaCorrente() {
 	// Retorno:
 	// 1 = OK, 0 = Erro
 
-	if (geral_pegarPastaCorrente(cfg.diretorio_base)) {
+	if (geral.pegarPastaCorrente(cfg.diretorio_base)) {
 		printf("[GMBR DS] Diretorio corrente obtido\n");
 
 		return 1;
@@ -108,7 +108,7 @@ int obterPastaCorrente() {
 		printf("\n[GMBR DS]----------------------------------------------------------------\n");
 		printf("# ERRO AO LER O CAMINHO DA PASTA CORRENTE #\n");
 		printf("-------------------------------------------------------------------------\n\n");
-		geral_pausar();
+		geral.pausar();
 
 		return 0;
 	}
@@ -120,9 +120,9 @@ int carregarCfgIni() {
 	// 1 = OK, 0 = Erro
 
 	// Existe o arquivo cfg.ini?
-	if (geral_verificarExistencia(cfg.inis.geral)) {
+	if (geral.verificarExistencia(cfg.inis.geral)) {
 		//Sim
-		if ((cfg.parametros = ini_ler(cfg.inis.geral)) != NULL) {
+		if ((cfg.parametros = ini.ler(cfg.inis.geral)) != NULL) {
 			// Leu com sucesso
 			printf("[GMBR DS] Arquivo cfg.ini carregado\n");
 		} else {
@@ -132,7 +132,7 @@ int carregarCfgIni() {
 			printf("'%s'\n", cfg.inis.geral);
 			printf("VERIFIQUE SE TODOS OS PARAMETROS ESTAO PRESENTES E BEM FORMATADOS\n");
 			printf("-----------------------------------------------------------------------\n\n");
-			geral_pausar();
+			geral.pausar();
 
 			return 0;
 		}
@@ -144,7 +144,7 @@ int carregarCfgIni() {
 		printf("1) VERIFIQUE SE ELE ESTA PRESENTE NA PASTA 'CFG'\n");
 		printf("2) VERIFIQUE SE TODOS OS PARAMETROS ESTAO PRESENTES E BEM FORMATADOS\n");
 		printf("-----------------------------------------------------------------------\n\n");
-		geral_pausar();
+		geral.pausar();
 
 		return 0;
 	}
@@ -158,9 +158,9 @@ int carregarContentsIni() {
 	// 1 = OK, 0 = Erro
 
 	// Existe o arquivo contents.ini?
-	if (geral_verificarExistencia(cfg.inis.contents)) {
+	if (geral.verificarExistencia(cfg.inis.contents)) {
 		// Sim
-		if ((cfg.contents = ini_ler(cfg.inis.contents)) != NULL) {
+		if ((cfg.contents = ini.ler(cfg.inis.contents)) != NULL) {
 			// Leu com sucesso
 			printf("[GMBR DS] Arquivo contents.ini carregado\n");
 		} else {
@@ -169,7 +169,7 @@ int carregarContentsIni() {
 			printf("ERRO AO CARREGAR O ARQUIVO\n");
 			printf("'%s'\n", cfg.inis.contents);
 			printf("-----------------------------------------------------------------------\n\n");
-			geral_pausar();
+			geral.pausar();
 
 			return 0;
 		}
@@ -179,7 +179,7 @@ int carregarContentsIni() {
 		printf("NAO FOI POSSIVEL CARREGAR O ARQUIVO\n");
 		printf("'%s'\n", cfg.inis.contents);
 		printf("-----------------------------------------------------------------------\n\n");
-		geral_pausar();
+		geral.pausar();
 
 		return 0;
 	}
@@ -195,7 +195,7 @@ int encontrarSteam() {
 	char temp[MAX_CHAR_DIR];
 
 	// Existe algum valor em "pasta_steam" no cfg.ini?
-	if (strcmp(ini_buscar(cfg.parametros, "", "pasta_steam"),"") == 0) {
+	if (strcmp(ini.buscar(cfg.parametros, "", "pasta_steam"),"") == 0) {
 		// Não
 
 		// Vamos buscar a pasta do Steam nos lugares mais comuns onde ela pode estar
@@ -205,8 +205,8 @@ int encontrarSteam() {
 			const char *homedir;
 			DPADRAO(pw);
 			DPADRAO2(pw, homedir);
-			if (geral_verificarExistencia(strcat(strcat(strcat(strcat(strcpy(temp, homedir), BARRA), ".steam"), BARRA), cfg.steam.arquivo_achar)))
-				strcpy(ini_buscar(cfg.parametros, "", "pasta_steam"), strcat(strcat(strcpy(temp, homedir), BARRA), ".steam"));
+			if (geral.verificarExistencia(strcat(strcat(strcat(strcat(strcpy(temp, homedir), BARRA), ".steam"), BARRA), cfg.steam.arquivo_achar)))
+				strcpy(ini.buscar(cfg.parametros, "", "pasta_steam"), strcat(strcat(strcpy(temp, homedir), BARRA), ".steam"));
 		} else if (strcmp(SISTEMA,"Windows") == 0) {
 			// Windows
 			char unidade[5][3] = {"C:", "D:", "E:", "F:", "G:"};
@@ -221,27 +221,27 @@ int encontrarSteam() {
 
 			for (i=0; i<=3; i++)
 				for (j=0; j<=4; j++)
-					if (geral_verificarExistencia(strcat(strcat(strcat(strcpy(temp, unidade[i]), pasta[j]), BARRA), cfg.steam.arquivo_achar)))
-						strcpy(ini_buscar(cfg.parametros, "", "pasta_steam"), strcat(strcpy(temp, unidade[i]), pasta[j]));
+					if (geral.verificarExistencia(strcat(strcat(strcat(strcpy(temp, unidade[i]), pasta[j]), BARRA), cfg.steam.arquivo_achar)))
+						strcpy(ini.buscar(cfg.parametros, "", "pasta_steam"), strcat(strcpy(temp, unidade[i]), pasta[j]));
 		}
 
 		// Caso eu não a encontre, salvo uma mensagem de erro em "pasta_steam"
-		if (strcmp(ini_buscar(cfg.parametros, "", "pasta_steam"),"") == 0)
-			ini_alterar(cfg.parametros, "", "pasta_steam", cfg.steam.aviso_nao_encontrado);
+		if (strcmp(ini.buscar(cfg.parametros, "", "pasta_steam"),"") == 0)
+			ini.alterar(cfg.parametros, "", "pasta_steam", cfg.steam.aviso_nao_encontrado);
 	} else {
 		// Sim
 
 		// Eu consigo encontrar os arquivos do Steam no local informado?
-		if (geral_verificarExistencia(strcat(strcat(strcpy(temp, ini_buscar(cfg.parametros, "", "pasta_steam")), BARRA), cfg.steam.arquivo_achar))) {
+		if (geral.verificarExistencia(strcat(strcat(strcpy(temp, ini.buscar(cfg.parametros, "", "pasta_steam")), BARRA), cfg.steam.arquivo_achar))) {
 			// Sim. Sucesso
 			printf("[GMBR DS] A pasta do Steam foi localizada\n");
 		} else {
 			// Não. Erro
 			printf("\n[GMBR DS]--------------------------------------------------------------\n");
 			printf("A PASTA DO STEAM E INVALIDA:\n");
-			printf("'%s'\n", ini_buscar(cfg.parametros, "", "pasta_steam"));
+			printf("'%s'\n", ini.buscar(cfg.parametros, "", "pasta_steam"));
 			printf("-----------------------------------------------------------------------\n\n");
-			geral_pausar();
+			geral.pausar();
 
 			return 0;
 		}
@@ -254,58 +254,58 @@ void ajustarVariaveis() {
 	// Ajusta as informações que foram carregadas dos arquivos de configurações
 
 	char temp[MAX_CHAR_DIR];
-	ini* contents = cfg.contents;
+	no* contents = cfg.contents;
 
 	// Redefine o caminho para a pasta base se ela estiver alterada nas configurações
-	if ((strcmp(ini_buscar(cfg.parametros, "", "pasta_base"), "")) != 0)
-		strcat(strcpy(cfg.diretorio_base, ini_buscar(cfg.parametros, "", "pasta_base")), BARRA);
+	if ((strcmp(ini.buscar(cfg.parametros, "", "pasta_base"), "")) != 0)
+		strcat(strcpy(cfg.diretorio_base, ini.buscar(cfg.parametros, "", "pasta_base")), BARRA);
 
 	// Define o caminho da pasta dos contents
-	if ( ! geral_existeCharXNaStringY(BARRA[0], ini_buscar(cfg.parametros, "", "pasta_contents"))) { /* A pasta é relativa? Se sim, alterar o valor */
-		strcat(strcpy(temp, cfg.diretorio_base), ini_buscar(cfg.parametros, "", "pasta_contents"));
-		ini_alterar(cfg.parametros, "", "pasta_contents", temp);
+	if ( ! geral.existeCharXNaStringY(BARRA[0], ini.buscar(cfg.parametros, "", "pasta_contents"))) { /* A pasta é relativa? Se sim, alterar o valor */
+		strcat(strcpy(temp, cfg.diretorio_base), ini.buscar(cfg.parametros, "", "pasta_contents"));
+		ini.alterar(cfg.parametros, "", "pasta_contents", temp);
 	}
 
 	// Define o caminho da pasta do SteamCMD
-	if ( ! geral_existeCharXNaStringY(BARRA[0], ini_buscar(cfg.parametros, "", "pasta_steamcmd"))) { /* A pasta é relativa? Se sim, alterar o valor */
-		strcat(strcpy(temp, cfg.diretorio_base), ini_buscar(cfg.parametros, "", "pasta_steamcmd"));
-		ini_alterar(cfg.parametros, "", "pasta_steamcmd", temp);
+	if ( ! geral.existeCharXNaStringY(BARRA[0], ini.buscar(cfg.parametros, "", "pasta_steamcmd"))) { /* A pasta é relativa? Se sim, alterar o valor */
+		strcat(strcpy(temp, cfg.diretorio_base), ini.buscar(cfg.parametros, "", "pasta_steamcmd"));
+		ini.alterar(cfg.parametros, "", "pasta_steamcmd", temp);
 	}
 
 	// Define o caminho para a pasta do servidor de GMod
-	if ( ! geral_existeCharXNaStringY(BARRA[0], ini_buscar(cfg.parametros, "", "pasta_servidor"))) { /* A pasta é relativa? Se sim, alterar o valor */
-		strcat(strcpy(temp, cfg.diretorio_base), ini_buscar(cfg.parametros, "", "pasta_servidor"));
-		ini_alterar(cfg.parametros, "", "pasta_servidor", temp);
+	if ( ! geral.existeCharXNaStringY(BARRA[0], ini.buscar(cfg.parametros, "", "pasta_servidor"))) { /* A pasta é relativa? Se sim, alterar o valor */
+		strcat(strcpy(temp, cfg.diretorio_base), ini.buscar(cfg.parametros, "", "pasta_servidor"));
+		ini.alterar(cfg.parametros, "", "pasta_servidor", temp);
 	}
 
 	// Define os caminhos da pasta de cada content dentro da pasta dos contents
 	while ((*contents).proxima_secao != NULL) {
-		if (strcmp(ini_buscar(contents, (*contents).secao, "opcao"), "1") == 0) {
-			strcat(strcat(strcpy(temp, ini_buscar(cfg.parametros, "", "pasta_contents")), BARRA), (*contents).secao);
-			ini_inserir(contents, (*contents).secao, "pasta", temp);
+		if (strcmp(ini.buscar(contents, (*contents).secao, "opcao"), "1") == 0) {
+			strcat(strcat(strcpy(temp, ini.buscar(cfg.parametros, "", "pasta_contents")), BARRA), (*contents).secao);
+			ini.inserir(contents, (*contents).secao, "pasta", temp);
 		}
 		contents = (*contents).proxima_secao;
 	}
 
 	// Define o caminho para o executável do SteamCMD
-	strcat(strcat(strcpy(temp, ini_buscar(cfg.parametros, "", "pasta_steamcmd")), BARRA), cfg.steam.arquivo_steamcmd);
+	strcat(strcat(strcpy(temp, ini.buscar(cfg.parametros, "", "pasta_steamcmd")), BARRA), cfg.steam.arquivo_steamcmd);
 	strcpy(cfg.steam.arquivo_steamcmd, temp);
 
 	// Define o caminho para o executável do SRCDS
-	strcat(strcat(strcpy(temp, ini_buscar(cfg.parametros, "", "pasta_servidor")), BARRA), cfg.steam.arquivo_srcds);
+	strcat(strcat(strcpy(temp, ini.buscar(cfg.parametros, "", "pasta_servidor")), BARRA), cfg.steam.arquivo_srcds);
 	strcpy(cfg.steam.arquivo_srcds, temp);
 
 	// Define o caminho para o arquivo de bibliotecas
-	if (strcmp(ini_buscar(cfg.parametros, "", "pasta_steam"), cfg.steam.aviso_nao_encontrado) != 0) { /* O Steam foi encontrado anteriormente? Se sim, alterar o valor */
+	if (strcmp(ini.buscar(cfg.parametros, "", "pasta_steam"), cfg.steam.aviso_nao_encontrado) != 0) { /* O Steam foi encontrado anteriormente? Se sim, alterar o valor */
 		if (strcmp(SISTEMA,"Linux") == 0)
-			strcat(strcat(strcat(strcat(strcpy(temp, ini_buscar(cfg.parametros, "", "pasta_steam")), BARRA), "steam/steamapps"), BARRA), cfg.steam.arquivo_bibliotecas);
+			strcat(strcat(strcat(strcat(strcpy(temp, ini.buscar(cfg.parametros, "", "pasta_steam")), BARRA), "steam/steamapps"), BARRA), cfg.steam.arquivo_bibliotecas);
 		else if (strcmp(SISTEMA,"Windows") == 0)
-			strcat(strcat(strcat(strcat(strcpy(temp, ini_buscar(cfg.parametros, "", "pasta_steam")), BARRA), "steamapps"), BARRA), cfg.steam.arquivo_bibliotecas);
+			strcat(strcat(strcat(strcat(strcpy(temp, ini.buscar(cfg.parametros, "", "pasta_steam")), BARRA), "steamapps"), BARRA), cfg.steam.arquivo_bibliotecas);
 		strcpy(cfg.steam.arquivo_bibliotecas, temp);
 	}
 
 	// Define o caminho para o arquivo de montagem de contents do GMod
-	strcat(strcat(strcat(strcat(strcat(strcat(strcpy(temp, ini_buscar(cfg.parametros, "", "pasta_servidor")), BARRA), "garrysmod"), BARRA), "cfg"), BARRA), cfg.gmod.arquivo_mount);
+	strcat(strcat(strcat(strcat(strcat(strcat(strcpy(temp, ini.buscar(cfg.parametros, "", "pasta_servidor")), BARRA), "garrysmod"), BARRA), "cfg"), BARRA), cfg.gmod.arquivo_mount);
 	strcpy(cfg.gmod.arquivo_mount, temp);
 
 	printf("[GMBR DS] Variaveis reajustadas\n");
@@ -317,7 +317,7 @@ int buscarBibliotecas() {
 	// 1 = Carregou as pastas, 0 = Erro
 
 	// Checa se o Steam foi encontrado anteriormente
-	if (strcmp(ini_buscar(cfg.parametros, "", "pasta_steam"), cfg.steam.aviso_nao_encontrado) != 0) {
+	if (strcmp(ini.buscar(cfg.parametros, "", "pasta_steam"), cfg.steam.aviso_nao_encontrado) != 0) {
 		// Sim
 
 		FILE *fp;
@@ -333,7 +333,7 @@ int buscarBibliotecas() {
 			printf("ERRO AO ABRIR O ARQUIVO DE BIBLIOTECAS DO STEAM!\n");
 			printf("'%s'\n", cfg.steam.arquivo_bibliotecas);
 			printf("-----------------------------------------------------------------------\n\n");
-			geral_pausar();
+			geral.pausar();
 
 			return 0;
 		}
@@ -359,7 +359,7 @@ int buscarBibliotecas() {
 								printf("OU TENTE RECOMPILAR O PROJETO VOCE MESMO. TER MENOS BIBLIOTECAS TAMBEM E UMA\n");
 								printf("OPCAO.\n");
 								printf("-----------------------------------------------------------------------\n\n");
-								geral_pausar();
+								geral.pausar();
 
 								return 0;
 							}
@@ -414,20 +414,20 @@ int validarContents() {
 
 	int i = 0, j, contagem_de_contents = 0;
 	char temp[MAX_CHAR_DIR], opcao[1];
-	ini* contents = cfg.contents;
+	no* contents = cfg.contents;
 
 	// Checo os contents um por um
 	while ((*contents).proxima_secao != NULL) {
 		i++;
 
 		// Opção
-		strcpy(opcao, ini_buscar(cfg.contents, (*contents).secao, "opcao"));
+		strcpy(opcao, ini.buscar(cfg.contents, (*contents).secao, "opcao"));
 
 		// Validação de contents do tipo 1
 		if (strcmp(opcao, "1") == 0) {
 			char login[30];
 
-			strcpy(login, ini_buscar(cfg.contents, (*contents).secao, "login"));
+			strcpy(login, ini.buscar(cfg.contents, (*contents).secao, "login"));
 
 			contagem_de_contents++;
 
@@ -438,20 +438,20 @@ int validarContents() {
 				printf("VOCE MARCOU PARA DOWNLOAD UM CONTENT QUE NAO SUPORTA TAL OPERACAO. VA\n");
 				printf("EM 'CONTENTS.INI' CORRIGIR O PROBLEMA.\n");
 				printf("-----------------------------------------------------------------------\n\n");
-				geral_pausar();
+				geral.pausar();
 
 				return 0;
 			}
 
 			// Checa se o content necessita de login e se o login foi configurado
 			if (strcmp(login, "Usuario") == 0) {
-				if (strcmp(ini_buscar(cfg.parametros, "", "login_steam"), "") == 0) {
+				if (strcmp(ini.buscar(cfg.parametros, "", "login_steam"), "") == 0) {
 					printf("\n[GMBR DS]--------------------------------------------------------------\n");
 					printf("ERRO NO CONTENT '%s'!\n", (*contents).secao);
 					printf("ESSE CONTENT REQUER LOGIN PARA SER BAIXADO, POREM O CAMPO \"login_steam\"\n");
 					printf("NAO FOI CONFIGURADO EM 'CFG.INI'.\n");
 					printf("-----------------------------------------------------------------------\n\n");
-					geral_pausar();
+					geral.pausar();
 
 					return 0;
 				}
@@ -462,45 +462,45 @@ int validarContents() {
 			contagem_de_contents++;
 
 			// Verifica se "Caminho do content" não é um endereço válido
-			if ( ! geral_verificarExistencia(ini_buscar(cfg.contents, (*contents).secao, "steam"))) {
+			if ( ! geral.verificarExistencia(ini.buscar(cfg.contents, (*contents).secao, "steam"))) {
 				// Verifica se a pasta do Steam está configurada
-				if (strcmp(ini_buscar(cfg.parametros, "", "pasta_steam"), cfg.steam.aviso_nao_encontrado) == 0) {
+				if (strcmp(ini.buscar(cfg.parametros, "", "pasta_steam"), cfg.steam.aviso_nao_encontrado) == 0) {
 					printf("\n[GMBR DS]--------------------------------------------------------------\n");
 					printf("O GMBR DS NAO FOI CAPAZ DE ENCONTRAR A PASTA DO STEAM AUTOMATICMENTE!\n");
 					printf("PARA PODER USAR SEUS CONTENTS QUE FORAM MARCADOS COM A OPCAO 2, INSIRA-A\n");
 					printf("NO ARQUIVO 'CFG.INI' !OU! ESCREVA O ENDERECO DE DIRETORIO COMPLETO DELES\n");
 					printf("EM 'CONTENTS.INI'.\n");
 					printf("-----------------------------------------------------------------------\n\n");
-					geral_pausar();
+					geral.pausar();
 
 					return 0;
 
 				// Verifica se existe "Steam + Caminho content"
-				} else if (geral_verificarExistencia(strcat(strcpy(temp, ini_buscar(cfg.parametros, "", "pasta_steam")), ini_buscar(cfg.contents, (*contents).secao, "steam"))))
-					ini_alterar(cfg.contents, (*contents).secao, "steam", temp);
+				} else if (geral.verificarExistencia(strcat(strcpy(temp, ini.buscar(cfg.parametros, "", "pasta_steam")), ini.buscar(cfg.contents, (*contents).secao, "steam"))))
+					ini.alterar(cfg.contents, (*contents).secao, "steam", temp);
 
 				// Verifica se existe "Steam + BARRA + Caminho content"
-				else if (geral_verificarExistencia(strcat(strcat(strcpy(temp, ini_buscar(cfg.parametros, "", "pasta_steam")), BARRA), ini_buscar(cfg.contents, (*contents).secao, "steam"))))
-					ini_alterar(cfg.contents, (*contents).secao, "steam", temp);
+				else if (geral.verificarExistencia(strcat(strcat(strcpy(temp, ini.buscar(cfg.parametros, "", "pasta_steam")), BARRA), ini.buscar(cfg.contents, (*contents).secao, "steam"))))
+					ini.alterar(cfg.contents, (*contents).secao, "steam", temp);
 				else
 					for (j = 0; j < MAX_LIBS; j++) {
 						// Verifica se existe "Biblioteca + Caminho content"
-						if ((geral_verificarExistencia(strcat(strcpy(temp, cfg.steam.libs.biblioteca[j]), ini_buscar(cfg.contents, (*contents).secao, "steam")))))
-							ini_alterar(cfg.contents, (*contents).secao, "steam", temp);
+						if ((geral.verificarExistencia(strcat(strcpy(temp, cfg.steam.libs.biblioteca[j]), ini.buscar(cfg.contents, (*contents).secao, "steam")))))
+							ini.alterar(cfg.contents, (*contents).secao, "steam", temp);
 
 						// Verifica se existe "Biblioteca + BARRA + Caminho content"
-						else if ((geral_verificarExistencia(strcat(strcat(strcpy(temp, cfg.steam.libs.biblioteca[j]), BARRA), ini_buscar(cfg.contents, (*contents).secao, "steam")))))
-							ini_alterar(cfg.contents, (*contents).secao, "steam", temp);
+						else if ((geral.verificarExistencia(strcat(strcat(strcpy(temp, cfg.steam.libs.biblioteca[j]), BARRA), ini.buscar(cfg.contents, (*contents).secao, "steam")))))
+							ini.alterar(cfg.contents, (*contents).secao, "steam", temp);
 					}
 
 				// Se o content ainda não for válido, retorno erro
-				if ( ! geral_verificarExistencia(ini_buscar(cfg.contents, (*contents).secao, "steam"))) {
+				if ( ! geral.verificarExistencia(ini.buscar(cfg.contents, (*contents).secao, "steam"))) {
 					printf("\n[GMBR DS]--------------------------------------------------------------\n");
 					printf("A PASTA DO CONTENT '%s' E INVALIDA!\n", (*contents).secao);
 					printf("CHEQUE SE ELA EXISTE EM STEAMAPPS OU SE VOCE ESCREVEU CORRETAMENTE:\n");
-					printf("'%s'\n", ini_buscar(cfg.contents, (*contents).secao, "steam"));
+					printf("'%s'\n", ini.buscar(cfg.contents, (*contents).secao, "steam"));
 					printf("-----------------------------------------------------------------------\n\n");
-					geral_pausar();
+					geral.pausar();
 
 					return 0;
 				}
@@ -531,7 +531,7 @@ int exibirTelaInicial() {
 	int numero_real, numero_exibido;
 	int quantidade_de_opcoes = 6, opcao[quantidade_de_opcoes], escolha, escolha_ruim;
 	char *endptr, temp[MAX_CHAR_DIR];
-	ini *contents;
+	no *contents;
 
 	// Elimina o lixo do array
 	for (numero_real=0; numero_real<=quantidade_de_opcoes; numero_real++)
@@ -585,7 +585,7 @@ int exibirTelaInicial() {
 		opcao[1] = numero_exibido++;
 		contents = cfg.contents;
 		while ((*contents).proxima_secao != NULL) {
-			if (strcmp(ini_buscar(contents, (*contents).secao, "opcao"), "1") == 0) {
+			if (strcmp(ini.buscar(contents, (*contents).secao, "opcao"), "1") == 0) {
 				printf("%d: Instalar/atualizar os contents\n", numero_exibido);
 				opcao[2] = numero_exibido++;
 				printf("%d: Instalar/atualizar o servidor de GMod e os contents\n", numero_exibido);
@@ -594,7 +594,7 @@ int exibirTelaInicial() {
 			}
 			contents = (*contents).proxima_secao;
 		}
-		if (geral_verificarExistencia(cfg.steam.arquivo_srcds)) {
+		if (geral.verificarExistencia(cfg.steam.arquivo_srcds)) {
 			printf("%d: Iniciar o servidor\n", numero_exibido);
 			opcao[4] = numero_exibido++;
 			printf("%d: Forcar montagem de contents\n", numero_exibido);
@@ -636,7 +636,7 @@ void exibirConfiguracoes() {
 	// Mostra todas as opções carregadas
 
 	int i;
-	ini *contents;
+	no *contents;
 
 	// Limpo a tela
 	CLRSCR;
@@ -655,10 +655,10 @@ void exibirConfiguracoes() {
 	printf("    ");
 	for (i = 0; i < strlen(cfg.diretorio_base) - 1; i++) /* Tiro a barra no final */
 		printf("%c", cfg.diretorio_base[i]);
-	printf("\n  Servidor de GMod:\n    %s\n",ini_buscar(cfg.parametros, "", "pasta_servidor"));
-	printf("  Contents:\n    %s\n",ini_buscar(cfg.parametros, "", "pasta_contents"));
-	printf("  Steam:\n    %s\n", ini_buscar(cfg.parametros, "", "pasta_steam"));
-	printf("  SteamCMD:\n    %s\n", ini_buscar(cfg.parametros, "", "pasta_steamcmd"));
+	printf("\n  Servidor de GMod:\n    %s\n",ini.buscar(cfg.parametros, "", "pasta_servidor"));
+	printf("  Contents:\n    %s\n",ini.buscar(cfg.parametros, "", "pasta_contents"));
+	printf("  Steam:\n    %s\n", ini.buscar(cfg.parametros, "", "pasta_steam"));
+	printf("  SteamCMD:\n    %s\n", ini.buscar(cfg.parametros, "", "pasta_steamcmd"));
 
 	// Bibliotecas do Steam (Caso existam)
 	if (cfg.steam.libs.quantidade > 0) {
@@ -671,7 +671,7 @@ void exibirConfiguracoes() {
 	// Arquivos que serão baixados
 	printf(" ________\n");
 	printf("[DOWNLOAD]\n\n");
-	printf("  SteamCMD:\n    %s\n", ini_buscar(cfg.parametros, "", "download_steamcmd"));
+	printf("  SteamCMD:\n    %s\n", ini.buscar(cfg.parametros, "", "download_steamcmd"));
 
 	// Arquivos importantes para o GMBR DS
 	printf(" ________\n");
@@ -687,22 +687,22 @@ void exibirConfiguracoes() {
 	printf("[INFORMACAO DO SERVIDOR E DOS CONTENTS CARREGADOS]\n\n");
 	printf("    ___________\n");
 	printf("  + %s\n", cfg.gmod.nome );
-	printf("    pasta = %s\n", ini_buscar(cfg.parametros, "", "pasta_servidor"));
+	printf("    pasta = %s\n", ini.buscar(cfg.parametros, "", "pasta_servidor"));
 	printf("    id = %s\n\n", cfg.gmod.id);
 	contents = cfg.contents;
 	while ((*contents).proxima_secao != NULL) {
-		if (strcmp(ini_buscar(contents, (*contents).secao, "opcao"), "3") != 0) {
+		if (strcmp(ini.buscar(contents, (*contents).secao, "opcao"), "3") != 0) {
 			printf("\n");
-			if (strcmp(ini_buscar(contents, (*contents).secao, "opcao"), "1") == 0) {
+			if (strcmp(ini.buscar(contents, (*contents).secao, "opcao"), "1") == 0) {
 				printf("  + %s\n", (*contents).secao);
-				printf("    pasta = %s\n", ini_buscar(contents, (*contents).secao, "pasta"));
-				printf("    login = %s\n", ini_buscar(contents, (*contents).secao, "login"));
-				printf("    id    = %s\n", ini_buscar(contents, (*contents).secao, "id"));
-				printf("    opcao = %s\n", ini_buscar(contents, (*contents).secao, "opcao"));
-			} else if (strcmp(ini_buscar(contents, (*contents).secao, "opcao"), "2") == 0) {
+				printf("    pasta = %s\n", ini.buscar(contents, (*contents).secao, "pasta"));
+				printf("    login = %s\n", ini.buscar(contents, (*contents).secao, "login"));
+				printf("    id    = %s\n", ini.buscar(contents, (*contents).secao, "id"));
+				printf("    opcao = %s\n", ini.buscar(contents, (*contents).secao, "opcao"));
+			} else if (strcmp(ini.buscar(contents, (*contents).secao, "opcao"), "2") == 0) {
 				printf("  + %s\n", (*contents).secao);
-				printf("    steam = %s\n", ini_buscar(contents, (*contents).secao, "steam"));
-				printf("    opcao = %s\n", ini_buscar(contents, (*contents).secao,"opcao"));
+				printf("    steam = %s\n", ini.buscar(contents, (*contents).secao, "steam"));
+				printf("    opcao = %s\n", ini.buscar(contents, (*contents).secao,"opcao"));
 			}
 		}
 		contents = (*contents).proxima_secao;
@@ -711,7 +711,7 @@ void exibirConfiguracoes() {
 	// O comando para abrir o servidor via terminal (por completo)
 	printf(" ___________________\n");
 	printf("[COMANDO DO SERVIDOR]\n\n");
-	printf("    '%s' %s\n", cfg.steam.arquivo_srcds, ini_buscar(cfg.parametros, "", "comando_sv"));
+	printf("    '%s' %s\n", cfg.steam.arquivo_srcds, ini.buscar(cfg.parametros, "", "comando_sv"));
 	printf("\n");
 
 	// Fim
@@ -719,7 +719,7 @@ void exibirConfiguracoes() {
 	printf("\n");
 	printf("\n");
 
-	geral_pausar();
+	geral.pausar();
 }
 
 int criarPastasBase() {
@@ -736,16 +736,16 @@ int criarPastasBase() {
 			strcpy(temp, cfg.diretorio_base);
 		// Pasta do SteamCMD
 		else if (j == 2)
-			strcpy(temp, ini_buscar(cfg.parametros, "", "pasta_steamcmd"));
+			strcpy(temp, ini.buscar(cfg.parametros, "", "pasta_steamcmd"));
 		// Pasta do GMod
 		else if (j == 3)
-			strcpy(temp, ini_buscar(cfg.parametros, "", "pasta_servidor"));
+			strcpy(temp, ini.buscar(cfg.parametros, "", "pasta_servidor"));
 		// Pasta dos contents
 		else if (j == 4)
-			strcpy(temp, ini_buscar(cfg.parametros, "", "pasta_contents"));
+			strcpy(temp, ini.buscar(cfg.parametros, "", "pasta_contents"));
 
 		// Tenta criar a pasta
-		if ((retorno = geral_criarPasta(temp)) == 1)
+		if ((retorno = geral.criarPasta(temp)) == 1)
 			printf("[GMBR DS] Pasta criada: '%s'\n", temp);
 
 		// Mensagem de erro geral na criação de pastas
@@ -753,7 +753,7 @@ int criarPastasBase() {
 			printf("\n[GMBR DS]--------------------------------------------------------------\n");
 			printf("ERRO AO CRIAR PASTA '%s'\n", temp);
 			printf("-----------------------------------------------------------------------\n");
-			geral_pausar();
+			geral.pausar();
 
 			return 0;
 		}
@@ -769,25 +769,25 @@ int criarPastasDosContents() {
 
 	int retorno;
 	char temp[MAX_CHAR_DIR];
-	ini* contentsAux = cfg.contents;
+	no* contentsAux = cfg.contents;
 
 	// Checo os contents um por um
 	while ((*contentsAux).proxima_secao != NULL) {
 		// Está marcado para instalação?
-		if (strcmp(ini_buscar(contentsAux, (*contentsAux).secao, "opcao"), "1") == 0) {
+		if (strcmp(ini.buscar(contentsAux, (*contentsAux).secao, "opcao"), "1") == 0) {
 			// Sim
 
 			// Pego a pasta do content
-			strcpy(temp, ini_buscar(contentsAux, (*contentsAux).secao, "pasta"));
+			strcpy(temp, ini.buscar(contentsAux, (*contentsAux).secao, "pasta"));
 
 			// Tento criá-la
-			if ((retorno = geral_criarPasta(temp)) == 1)
+			if ((retorno = geral.criarPasta(temp)) == 1)
 				printf("[GMBR DS] Pasta criada: '%s'\n", temp);
 			else if (retorno == 2) {
 				printf("\n[GMBR DS]--------------------------------------------------------------\n");
 				printf("ERRO AO CRIAR PASTA '%s'\n", temp);
 				printf("-----------------------------------------------------------------------\n");
-				geral_pausar();
+				geral.pausar();
 
 				return 0;
 			}
@@ -806,18 +806,18 @@ int instalarSteamCMD() {
 	// 1 = OK, 0 = Erro
 
 	// Verifica se existe o executável do SteamCMD
-	if ( ! geral_verificarExistencia(cfg.steam.arquivo_steamcmd)) {
+	if ( ! geral.verificarExistencia(cfg.steam.arquivo_steamcmd)) {
 		// Não
 
 		char array[300], *partes, *parte_certa="", barra[2]="/";
 		char arquivo[30], comando_download[300], comando_extrair[300];
 
-		printf("\n[GMBR DS] Baixando SteamCMD em '%s'...\n\n", ini_buscar(cfg.parametros, "", "pasta_steamcmd"));
+		printf("\n[GMBR DS] Baixando SteamCMD em '%s'...\n\n", ini.buscar(cfg.parametros, "", "pasta_steamcmd"));
 
 		// Pego o nome do arquivo que será baixado (a partir do link de download)
 		//-----------------------------------------
 		// Copio para "temp" o link de download
-		strcpy(array, ini_buscar(cfg.parametros, "", "download_steamcmd"));
+		strcpy(array, ini.buscar(cfg.parametros, "", "download_steamcmd"));
 		// Explodo "temp" nas barras
 		partes = strtok(array, barra);
 		// Pego o nome do arquivo e salvo em "parte_certa" (obs: o loop vai até o final e "partes" fica nulo)
@@ -828,10 +828,10 @@ int instalarSteamCMD() {
 		//-----------------------------------------
 
 		// Defino o caminho absoluto do arquivo na pasta do SteamCMD do GMBR DS
-		strcat(strcat(strcpy(arquivo, ini_buscar(cfg.parametros, "", "pasta_steamcmd")), BARRA), parte_certa);
+		strcat(strcat(strcpy(arquivo, ini.buscar(cfg.parametros, "", "pasta_steamcmd")), BARRA), parte_certa);
 
 		// Removo algum download antigo do SteamCMD que possa existir nessa pasta
-		if (geral_verificarExistencia(arquivo))
+		if (geral.verificarExistencia(arquivo))
 			remove(arquivo);
 
 		// Faz o download do SteamCMD
@@ -839,7 +839,7 @@ int instalarSteamCMD() {
 			strcpy(comando_download, "wget ");
 		else if (strcmp(SISTEMA,"Windows") == 0)
 			strcpy(comando_download, "bin\\wget ");
-		strcat(strcat(strcat(strcat(comando_download, ini_buscar(cfg.parametros, "", "download_steamcmd")), " -P \""), ini_buscar(cfg.parametros, "", "pasta_steamcmd")), "\"");
+		strcat(strcat(strcat(strcat(comando_download, ini.buscar(cfg.parametros, "", "download_steamcmd")), " -P \""), ini.buscar(cfg.parametros, "", "pasta_steamcmd")), "\"");
 		if ((system(comando_download)) != 0) {
 			printf("\n[GMBR DS]--------------------------------------------------------------\n");
 			printf("ERRO AO BAIXAR O STEAMCMD\n");
@@ -847,23 +847,23 @@ int instalarSteamCMD() {
 			if (strcmp(SISTEMA,"Windows") == 0)
 				printf("O PROGRAMA 'WGET.EXE' ESTA NA PASTA CFG?\n");
 			printf("-----------------------------------------------------------------------\n\n");
-			geral_pausar();
+			geral.pausar();
 
 			return 0;
 		}
 
 		// Extrai o zip
 		if (strcmp(SISTEMA,"Linux") == 0)
-			strcat(strcat(strcat(strcat(strcat(strcat(strcpy(comando_extrair, "tar -xvzf \""), arquivo), "\""), " -C "), "\""), ini_buscar(cfg.parametros, "", "pasta_steamcmd")), "\"");
+			strcat(strcat(strcat(strcat(strcat(strcat(strcpy(comando_extrair, "tar -xvzf \""), arquivo), "\""), " -C "), "\""), ini.buscar(cfg.parametros, "", "pasta_steamcmd")), "\"");
 		else if (strcmp(SISTEMA,"Windows") == 0)
-			strcat(strcat(strcat(strcat(strcat(strcat(strcpy(comando_extrair, "bin\\unzip.exe \""), arquivo), "\""), " -d "), "\""), ini_buscar(cfg.parametros, "", "pasta_steamcmd")), "\"");
+			strcat(strcat(strcat(strcat(strcat(strcat(strcpy(comando_extrair, "bin\\unzip.exe \""), arquivo), "\""), " -d "), "\""), ini.buscar(cfg.parametros, "", "pasta_steamcmd")), "\"");
 		if ((system(comando_extrair)) != 0) {
 			printf("\n[GMBR DS]--------------------------------------------------------------\n");
 			printf("ERRO AO EXTRAIR O STEAMCMD\n");
 			if (strcmp(SISTEMA,"Windows") == 0)
 				printf("O PROGRAMA 'UNZIP.EXE' ESTA NA PASTA CFG?\n");
 			printf("-----------------------------------------------------------------------\n\n");
-			geral_pausar();
+			geral.pausar();
 
 			return 0;
 		}
@@ -887,7 +887,7 @@ int instalarAtualizarAux(char id[], char pasta[], char login[]) {
 	else if (strcmp(SISTEMA,"Windows") == 0)
 		strcpy(parte, "\" & \"");
 	strcat(strcat(strcat(strcat(strcat(strcat(strcat(strcat(strcat(strcat(strcat(strcat(strcpy(
-	comando, "cd \""), ini_buscar(cfg.parametros, "", "pasta_steamcmd")), parte), cfg.steam.arquivo_steamcmd),
+	comando, "cd \""), ini.buscar(cfg.parametros, "", "pasta_steamcmd")), parte), cfg.steam.arquivo_steamcmd),
 	"\" +login "), login), " +force_install_dir "), "\""), pasta), "\""), " +app_update "), id), " validate +quit");
 
 	// Mostro o comando completo para o usuário
@@ -913,7 +913,7 @@ int instalarAtualizarSv() {
 	printf("[GMBR DS] Instalando/atualizando '%s'...\n\n", cfg.gmod.nome);
 
 	// Pasta
-	strcpy(pasta, ini_buscar(cfg.parametros, "", "pasta_servidor"));
+	strcpy(pasta, ini.buscar(cfg.parametros, "", "pasta_servidor"));
 
 	// Instalação
 	if ( ! instalarAtualizarAux(cfg.gmod.id, pasta, "anonymous"))
@@ -927,26 +927,26 @@ int instalarAtualizarContents() {
 	// Retorno:
 	// 1 = Instalação bem sucedida, 0 = Erro
 
-	ini* contentsAux = cfg.contents;
+	no* contentsAux = cfg.contents;
 	char login[30], pasta[MAX_CHAR_DIR], id[10];
 
 	while ((*contentsAux).proxima_secao != NULL) {
-		if (strcmp(ini_buscar(contentsAux, (*contentsAux).secao, "opcao"), "1") == 0) {
+		if (strcmp(ini.buscar(contentsAux, (*contentsAux).secao, "opcao"), "1") == 0) {
 
 			printf("\n[GMBR DS] Instalando/atualizando '%s'...\n\n", (*contentsAux).secao);
 
 			// Login
-			if (strcmp(ini_buscar(cfg.contents, (*contentsAux).secao, "login"), "Usuario") == 0) {
+			if (strcmp(ini.buscar(cfg.contents, (*contentsAux).secao, "login"), "Usuario") == 0) {
 				printf("[GMBR DS] Para que esse download de content funcione, a \"login_steam\" do cfg.ini deve estar com login outomatico no Steam ou ja logada no Steam\n\n");
-				strcpy(login, ini_buscar(cfg.parametros, "", "login_steam"));
+				strcpy(login, ini.buscar(cfg.parametros, "", "login_steam"));
 			} else
 				strcpy(login, "anonymous");
 
 			// Pasta
-			strcpy(pasta, ini_buscar(contentsAux, (*contentsAux).secao, "pasta"));
+			strcpy(pasta, ini.buscar(contentsAux, (*contentsAux).secao, "pasta"));
 
 			// ID
-			strcpy(id, ini_buscar(contentsAux, (*contentsAux).secao, "id"));
+			strcpy(id, ini.buscar(contentsAux, (*contentsAux).secao, "id"));
 
 			// Instalação
 			if ( ! instalarAtualizarAux(id, pasta, login))
@@ -965,16 +965,16 @@ int montarContents() {
 	// 1 = OK, 0 = Erro
 
 	FILE *fp;
-	ini* contentsAux = cfg.contents;
+	no* contentsAux = cfg.contents;
 
 	// Verifica se o arquivo de montagem existe
-	if ( ! geral_verificarExistencia(cfg.gmod.arquivo_mount)) {
+	if ( ! geral.verificarExistencia(cfg.gmod.arquivo_mount)) {
 		// Não
 		printf("\n[GMBR DS]--------------------------------------------------------------\n");
 		printf("NAO FOI POSSIVEL MONTAR OS CONTENTS! ARQUIVO NAO ENCONTRADO:\n");
 		printf("'%s'\n", cfg.gmod.arquivo_mount);
 		printf("-----------------------------------------------------------------------\n\n");
-		geral_pausar();
+		geral.pausar();
 
 		return 0;
 	} else {
@@ -992,7 +992,7 @@ int montarContents() {
 			printf("NAO FOI POSSIVEL MONTAR OS CONTENTS! ERRO AO ABRIR O ARQUIVO:\n");
 			printf("'%s'\n", cfg.gmod.arquivo_mount);
 			printf("-----------------------------------------------------------------------\n\n");
-			geral_pausar();
+			geral.pausar();
 
 			return 0;
 
@@ -1008,10 +1008,10 @@ int montarContents() {
 		// Montagem de contents (opção em 1 e 2)
 		fprintf(fp, "\"mountcfg\"%s{%s", PULO, PULO);
 		while ((*contentsAux).proxima_secao != NULL) {
-			if (strcmp(ini_buscar(contentsAux, (*contentsAux).secao, "opcao"), "1") == 0)
-				fprintf(fp, "\t\"%s\" \"%s\"%s", (*contentsAux).secao, ini_buscar(contentsAux, (*contentsAux).secao, "pasta"), PULO);
-			else if (strcmp(ini_buscar(contentsAux, (*contentsAux).secao, "opcao"), "2") == 0)
-				fprintf(fp, "\t\"%s\" \"%s\"%s", (*contentsAux).secao, ini_buscar(contentsAux, (*contentsAux).secao, "steam"), PULO);
+			if (strcmp(ini.buscar(contentsAux, (*contentsAux).secao, "opcao"), "1") == 0)
+				fprintf(fp, "\t\"%s\" \"%s\"%s", (*contentsAux).secao, ini.buscar(contentsAux, (*contentsAux).secao, "pasta"), PULO);
+			else if (strcmp(ini.buscar(contentsAux, (*contentsAux).secao, "opcao"), "2") == 0)
+				fprintf(fp, "\t\"%s\" \"%s\"%s", (*contentsAux).secao, ini.buscar(contentsAux, (*contentsAux).secao, "steam"), PULO);
 			contentsAux = (*contentsAux).proxima_secao;
 		}
 		fprintf(fp, "}");
@@ -1035,14 +1035,14 @@ void ligarServer() {
 	printf("[GMBR DS] Ligando o servidor...\n");
 
 	// Mostro o comando completo para o usuário
-	printf("[GMBR DS] \"%s\" %s\n\n", cfg.steam.arquivo_srcds, ini_buscar(cfg.parametros, "", "comando_sv"));
+	printf("[GMBR DS] \"%s\" %s\n\n", cfg.steam.arquivo_srcds, ini.buscar(cfg.parametros, "", "comando_sv"));
 
 	// Abro o servidor de GMod
 	if (strcmp(SISTEMA,"Linux") == 0) {
-		strcpy(temp, strcat(strcat(strcat(strcat(strcpy(temp, "\""), cfg.steam.arquivo_srcds), "\""), " "), ini_buscar(cfg.parametros, "", "comando_sv")));
+		strcpy(temp, strcat(strcat(strcat(strcat(strcpy(temp, "\""), cfg.steam.arquivo_srcds), "\""), " "), ini.buscar(cfg.parametros, "", "comando_sv")));
 		system(temp);
 	} else if (strcmp(SISTEMA,"Windows") == 0)
-		ShellExecute(NULL, "open", cfg.steam.arquivo_srcds, ini_buscar(cfg.parametros, "", "comando_sv"), NULL, SW_SHOWDEFAULT);
+		ShellExecute(NULL, "open", cfg.steam.arquivo_srcds, ini.buscar(cfg.parametros, "", "comando_sv"), NULL, SW_SHOWDEFAULT);
 }
 
 void finalizarOpcao() {
@@ -1054,15 +1054,15 @@ void finalizarOpcao() {
 	printf("|    [GMBR DS] Opcao finalizada.    |\n");
 	printf("|                                   |\n\n");
 
-	geral_pausar();
+	geral.pausar();
 }
 
 void sair() {
 	// Sair
 
 	// Removo as as leituras dos arquivos ini da memória
-	ini_limpar(cfg.parametros);
-	ini_limpar(cfg.contents);
+	ini.limpar(cfg.parametros);
+	ini.limpar(cfg.contents);
 
 	exit(0);
 }
