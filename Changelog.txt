@@ -1,3 +1,8 @@
+v.Git (20/09/2018)
+- Melhorias nas estruturas de controle;
+- Inizator e Geral atualizados;
+- Melhoria no versionamento.
+
 v2.8.5 (05/09/2018)
 - url errada corrigida no cabeçalho;
 - Certas impressões de texto foram adaptadas para ficarem boas no Windows (eram caracteres especiais);
