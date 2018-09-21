@@ -30,12 +30,6 @@
 
 #define MAX_LIBS 10 /* Número máximo suportado de bibliotecas do Steam. Pode ser aumentado à vontade. */
 
-// Arquivos .ini
-struct inis_ {
-	char geral[MAX_CHAR_DIR]; /* Caminho até o cfg.no */
-	char contents[MAX_CHAR_DIR]; /* Caminho até o contents.no */
-};
-
 // Garry's Mod
 struct gmod_ {
 	char nome[30]; /* Nome do GMod */
@@ -62,10 +56,11 @@ struct steam_ {
 // Estrutura principal de controle
 struct config_ {
 	char diretorio_base[MAX_CHAR_DIR]; /* Caminho até o diretório corrente */
+	char caminho_ini_geral[MAX_CHAR_DIR]; /* Caminho até o cfg.no */
+	char caminho_ini_contents[MAX_CHAR_DIR]; /* Caminho até o contents.no */
 	char secao[4][9]; /* Nome das seções no arquivo cfg.no */
 	no *parametros; /* Estrutura do cfg.ini carregada */
 	no *contents; /* Estrutura do contents.ini carregada */
-	struct inis_ inis;
 	struct gmod_ gmod;
 	struct steam_ steam;
 } cfg;
@@ -73,8 +68,8 @@ struct config_ {
 void ajustarConfiguracoesBasicas() {
 	// Configurações que devem ser feitas primeiro ou não podem ficar espalhadas pelo código
 
-	strcat(strcat(strcat(strcpy(cfg.inis.geral, cfg.diretorio_base),"cfg"), BARRA),"cfg.ini");
-	strcat(strcat(strcat(strcpy(cfg.inis.contents, cfg.diretorio_base), "cfg"), BARRA),"contents.ini");
+	strcat(strcat(strcat(strcpy(cfg.caminho_ini_geral, cfg.diretorio_base),"cfg"), BARRA),"cfg.ini");
+	strcat(strcat(strcat(strcpy(cfg.caminho_ini_contents, cfg.diretorio_base), "cfg"), BARRA),"contents.ini");
 
 	if (strcmp(SISTEMA,"Linux") == 0) {
 		strcpy(cfg.steam.arquivo_achar, "steam.pid");
@@ -120,16 +115,16 @@ int carregarCfgIni() {
 	// 1 = OK, 0 = Erro
 
 	// Existe o arquivo cfg.ini?
-	if (geral.verificarExistencia(cfg.inis.geral)) {
+	if (geral.verificarExistencia(cfg.caminho_ini_geral)) {
 		//Sim
-		if ((cfg.parametros = ini.ler(cfg.inis.geral)) != NULL) {
+		if ((cfg.parametros = ini.ler(cfg.caminho_ini_geral)) != NULL) {
 			// Leu com sucesso
 			printf("[GMBR DS] Arquivo cfg.ini carregado\n");
 		} else {
 			// Problema na leitura
 			printf("\n[GMBR DS]--------------------------------------------------------------\n");
 			printf("ERRO AO CARREGAR AS OPCOES DO ARQUIVO\n");
-			printf("'%s'\n", cfg.inis.geral);
+			printf("'%s'\n", cfg.caminho_ini_geral);
 			printf("VERIFIQUE SE TODOS OS PARAMETROS ESTAO PRESENTES E BEM FORMATADOS\n");
 			printf("-----------------------------------------------------------------------\n\n");
 			geral.pausar();
@@ -140,7 +135,7 @@ int carregarCfgIni() {
 		// Não
 		printf("\n[GMBR DS]--------------------------------------------------------------\n");
 		printf("NAO FOI POSSIVEL CARREGAR O ARQUIVO\n");
-		printf("'%s'\n", cfg.inis.geral);
+		printf("'%s'\n", cfg.caminho_ini_geral);
 		printf("1) VERIFIQUE SE ELE ESTA PRESENTE NA PASTA 'CFG'\n");
 		printf("2) VERIFIQUE SE TODOS OS PARAMETROS ESTAO PRESENTES E BEM FORMATADOS\n");
 		printf("-----------------------------------------------------------------------\n\n");
@@ -158,16 +153,16 @@ int carregarContentsIni() {
 	// 1 = OK, 0 = Erro
 
 	// Existe o arquivo contents.ini?
-	if (geral.verificarExistencia(cfg.inis.contents)) {
+	if (geral.verificarExistencia(cfg.caminho_ini_contents)) {
 		// Sim
-		if ((cfg.contents = ini.ler(cfg.inis.contents)) != NULL) {
+		if ((cfg.contents = ini.ler(cfg.caminho_ini_contents)) != NULL) {
 			// Leu com sucesso
 			printf("[GMBR DS] Arquivo contents.ini carregado\n");
 		} else {
 			// Erro na leitura
 			printf("\n[GMBR DS]--------------------------------------------------------------\n");
 			printf("ERRO AO CARREGAR O ARQUIVO\n");
-			printf("'%s'\n", cfg.inis.contents);
+			printf("'%s'\n", cfg.caminho_ini_contents);
 			printf("-----------------------------------------------------------------------\n\n");
 			geral.pausar();
 
@@ -177,7 +172,7 @@ int carregarContentsIni() {
 		// Não
 		printf("\n[GMBR DS]--------------------------------------------------------------\n");
 		printf("NAO FOI POSSIVEL CARREGAR O ARQUIVO\n");
-		printf("'%s'\n", cfg.inis.contents);
+		printf("'%s'\n", cfg.caminho_ini_contents);
 		printf("-----------------------------------------------------------------------\n\n");
 		geral.pausar();
 
@@ -676,8 +671,8 @@ void exibirConfiguracoes() {
 	// Arquivos importantes para o GMBR DS
 	printf(" ________\n");
 	printf("[ARQUIVOS]\n\n");
-	printf("  Configuracoes gerais do GMBR DS:\n    %s\n", cfg.inis.geral);
-	printf("  Configuracao de contents do GMBR DS:\n    %s\n", cfg.inis.contents);
+	printf("  Configuracoes gerais do GMBR DS:\n    %s\n", cfg.caminho_ini_geral);
+	printf("  Configuracao de contents do GMBR DS:\n    %s\n", cfg.caminho_ini_contents);
 	printf("  Montagem de contents do GMod:\n    %s\n", cfg.gmod.arquivo_mount);
 	printf("  Executavel do SteamCMD:\n    %s\n", cfg.steam.arquivo_steamcmd);
 	printf("  Executavel do SRCDS:\n    %s\n", cfg.steam.arquivo_srcds);
