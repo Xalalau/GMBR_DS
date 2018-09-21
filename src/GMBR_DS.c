@@ -1,7 +1,7 @@
 /*
  *
  * por Xalalau Xubilozo
- * https://github.com/xalalau/GMBR_DS
+ * https://github.com/Xalalau/GMBR_DS
  * Licença: MIT
  *
  */
