@@ -58,7 +58,6 @@ struct config_ {
 	char diretorio_base[MAX_CHAR_DIR]; /* Caminho até o diretório corrente */
 	char caminho_ini_geral[MAX_CHAR_DIR]; /* Caminho até o cfg.no */
 	char caminho_ini_contents[MAX_CHAR_DIR]; /* Caminho até o contents.no */
-	char secao[4][9]; /* Nome das seções no arquivo cfg.no */
 	no *parametros; /* Estrutura do cfg.ini carregada */
 	no *contents; /* Estrutura do contents.ini carregada */
 	struct gmod_ gmod;
