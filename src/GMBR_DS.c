@@ -15,6 +15,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <sys/stat.h>
+#include <ctype.h> 
 #include <errno.h>
 #if __linux__
 	#include <unistd.h>
@@ -318,7 +319,8 @@ int buscarBibliotecas() {
 
 		FILE *fp;
 		int i = 0, j = 0;
-		char c, caracteres[MAX_CHAR_DIR];
+		char c = '\0';
+		char caracteres[MAX_CHAR_DIR] = "\0";
 		char *prt;
 
 		fp = fopen(cfg.steam.arquivo_bibliotecas, "r");
@@ -338,15 +340,16 @@ int buscarBibliotecas() {
 		while ((c = getc(fp)) != EOF) {
 			// Busco a primeira aspa
 			if (c == '"') {
+				memset(caracteres, '\0', sizeof(caracteres));
 				while ((c = fgetc(fp)) != EOF) {
 					// Capturo os caracteres em um array até achar outra aspa
 					if (c != '"')
 						caracteres[j++] = c;
-					// Verifico se o array é um número
+					// Verifico se o array é "path", que indica uma biblioteca
 					else {
 						caracteres[j] = '\0';
 						// Se for um número: guardo o valor entre as práximas aspas, pois é uma pasta de biblioteca do Steam
-						if (strtol(caracteres, &prt, 10) != 0) {
+						if (strcmp(caracteres, "path") == 0) {
 							// Verifica o limite de bibliotecas do GMBR DS antes de prosseguir
 							if (i > MAX_LIBS) {
 								printf("\n[GMBR DS]--------------------------------------------------------------\n");
@@ -361,6 +364,7 @@ int buscarBibliotecas() {
 							}
 
 							// Ok. Vamos pegar a pasta
+							memset(caracteres, '\0', sizeof(caracteres));
 							j = 0;
 							while ((c = fgetc(fp)) != EOF) {
 								if (c == '"') {
@@ -372,6 +376,7 @@ int buscarBibliotecas() {
 											j = 0;
 											// Salvo o diretório
 											strcpy(cfg.steam.libs.biblioteca[i++], caracteres);
+											break;
 										}
 									}
 									break;
