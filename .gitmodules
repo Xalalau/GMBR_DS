@@ -1,9 +1,0 @@
-[submodule "lib/Geral"]
-	path = lib/Geral
-	url = https://github.com/xalalau/Geral
-[submodule "lib/Inizator"]
-	path = lib/Inizator
-	url = https://github.com/xalalau/Inizator
-[submodule "lib/Comp-Wrapper"]
-	path = lib/Comp-Wrapper
-	url = https://github.com/xalalau/Comp-Wrapper

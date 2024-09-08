@@ -1,0 +1,97 @@
+#!/bin/bash
+
+# comp-wrapper V1.0 [10/06/2016]
+# por Xalalau Xubilozo
+# baseado em http://stackoverflow.com/questions/13510618/is-there-a-simple-way-to-redirect-object-file-creation-into-a-specified-dire
+# https://github.com/xalalau/Xalateca/tree/master/Bash/comp-wrapper
+# Licença: MIT
+
+ARGS=()
+folder=""
+total_args=$#
+type=""
+compiler=""
+
+function push() {
+  # usage: push ARRAYNAME ARG
+  # adds ARG to the end of ARRAY
+  eval $1[\${#$1[@]}]="\$2"
+}
+# Pego o nome do compilador
+compiler="$1"
+# Vejo se o compilador tem paramtro -c
+for (( i = 1; i <= $total_args; i++)); do
+  eval arg="\${$i}"
+  if [ "$arg" == "-c" ]; then
+    type="-c"
+    break
+  fi
+done
+
+# Processamento de argumentos para comandos tipo gcc -c
+if [ "$type" = "-c" ]; then
+  # Pasta destino
+  folder="$2"
+  # Conto em quantas subpastas o cd vai entrar nessa pasta destino
+  if [ "$folder" = "./" ]; then
+    folder_bars=-1
+  else
+    folder_bars=$(grep -o "/" <<< "$folder" | wc -l)
+  fi
+  # Vou pegando todos os parametros e acertando o nome dos arquivos .c de acordo com a pasta destino
+  for (( i = 3; i <= $total_args; i++)); do
+    eval arg="\${$i}"
+    if [ "${arg:((${#arg}-2)):2}" == ".c" ]; then
+      for (( j = 0; j <= $folder_bars; j++)); do
+        arg="../$arg"
+      done
+    fi
+    push ARGS "${arg}"
+  done
+# Processamento de argumentos para chamadas do tipo gcc -o
+else
+  # Vou pegando todos os parametros e buscando a pasta destino
+  for (( i = 2; i <= $total_args; i++)); do
+    eval arg="\${$i}"
+    push ARGS "${arg}"
+    # Pasta destino encontrada, mas vem com o nome do arquivo
+    if [ "$arg" = "-o" ]; then
+      eval arg="\${$((i + 1))}"
+      folder="$arg"
+    fi
+  done
+  # Vou acertar a pasta destino...
+  IFS='/' read -r -a array <<< "$folder"
+  folder=""
+  for index in "${!array[@]}"; do
+    up=$((index + 1))
+    # Se ela for so o nome de um arquivo, defino como "./"
+    if [ ! -n "${array[up]}" ] && [ "$folder" = "" ]; then
+      folder="./"
+    # Se ela for uma pasta com um nome de arquivo, tiro o nome do arquivo e deixo a pasta
+    elif [ -n "${array[up]}" ] && [ "$folder" = "" ]; then
+      folder=${array[index]}
+    # Se ela continuar com subpastas, vou adicionando-as
+    elif [ -n "${array[up]}" ]; then
+      folder=$folder/${array[index]}
+    fi
+  done
+fi
+
+# Se nao estivermos lidando com uma compilacao no diretorio atual, seguimos dentro desse if
+if [ "$folder" != "./" ]; then
+  # Crio as mastas
+  if [ ! -d "$folder" ]; then
+    echo ⎿ mkdir -p $folder
+    mkdir -p $folder
+  fi
+  # Dou cd nas pastas
+  if [ "$type" = "-c" ]; then
+    echo ⎿ cd $folder
+    cd $folder
+  fi
+fi
+
+# Executo o compilador
+echo ⎿ $compiler "${ARGS[@]}"
+exec $compiler "${ARGS[@]}"

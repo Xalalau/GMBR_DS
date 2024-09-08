@@ -124,7 +124,7 @@ DS32 = ${DIR_BINARIOS}/GMBR_DS_32bits${EXT}
 
 
 # Compilar tudo e fazer o deploy
-default: MINGW MODULOS COMPWRAPPER 64bits 32bits
+default: MINGW COMPWRAPPER 64bits 32bits
 ifeq ($(SYSTEM),LW)
 	@echo "\n[!] Despachando comando..."
 	$(MAKE) deploy SYSTEM=Linux
@@ -135,7 +135,7 @@ else
 endif
 
 # Criar executável de 64 bits
-64bits: MINGW MODULOS COMPWRAPPER MENSAGEM_64 ${O_GERAL_64} ${O_INIZATOR_64} ${O_GMBRDS_64} ${O_RECURSOS_64}
+64bits: MINGW COMPWRAPPER MENSAGEM_64 ${O_GERAL_64} ${O_INIZATOR_64} ${O_GMBRDS_64} ${O_RECURSOS_64}
 ifeq ($(SYSTEM),LW)
 	@echo "\n[!] Despachando comando..."
 	$(MAKE) 64bits SYSTEM=Windows
@@ -146,7 +146,7 @@ else
 endif
 
 # Criar executável de 32 bits
-32bits: MINGW MODULOS COMPWRAPPER MENSAGEM_32 ${O_GERAL_32} ${O_INIZATOR_32} ${O_GMBRDS_32} ${O_RECURSOS_32}
+32bits: MINGW COMPWRAPPER MENSAGEM_32 ${O_GERAL_32} ${O_INIZATOR_32} ${O_GMBRDS_32} ${O_RECURSOS_32}
 ifeq ($(SYSTEM),LW)
 	@echo "\n[!] Despachando comando..."
 	$(MAKE) 32bits SYSTEM=Windows
@@ -158,18 +158,18 @@ endif
 
 # Limpar todos os arquivos produzidos na compilação
 clean:
-ifeq "$(wildcard $(DIR_BIB_GERAL)/src )" "$(DIR_BIB_GERAL)/src"
-	rm -r ${DIR_BIB_GERAL}/*
-	rm -r ${DIR_BIB_GERAL}/.git
-endif
-ifeq "$(wildcard $(DIR_BIB_INIZATOR)/src )" "$(DIR_BIB_INIZATOR)/src"
-	rm -r ${DIR_BIB_INIZATOR}/*
-	rm -r ${DIR_BIB_INIZATOR}/.git
-endif
-ifeq "$(wildcard $(DIR_BIB_CWRAPPER)/src )" "$(DIR_BIB_CWRAPPER)/src"
-	rm -r ${DIR_BIB_CWRAPPER}/*
-	rm -r ${DIR_BIB_CWRAPPER}/.git
-endif
+# ifeq "$(wildcard $(DIR_BIB_GERAL)/src )" "$(DIR_BIB_GERAL)/src"
+# 	rm -r ${DIR_BIB_GERAL}/*
+# 	rm -r ${DIR_BIB_GERAL}/.git
+# endif
+# ifeq "$(wildcard $(DIR_BIB_INIZATOR)/src )" "$(DIR_BIB_INIZATOR)/src"
+# 	rm -r ${DIR_BIB_INIZATOR}/*
+# 	rm -r ${DIR_BIB_INIZATOR}/.git
+# endif
+# ifeq "$(wildcard $(DIR_BIB_CWRAPPER)/src )" "$(DIR_BIB_CWRAPPER)/src"
+# 	rm -r ${DIR_BIB_CWRAPPER}/*
+# 	rm -r ${DIR_BIB_CWRAPPER}/.git
+# endif
 ifeq "$(wildcard $(DIR_BUILD) )" "$(DIR_BUILD)"
 	rm -r ${DIR_BUILD}
 endif
@@ -272,18 +272,18 @@ endif
 endif
 
 # Módulos do GMBR DS
-MODULOS:
-ifeq ($(BIB_ATUALIZAR), 0)
-ifndef GIT_CHECK
-ifndef APT_CHECK
-	$(error "\nInstale o Git para poder usar esse makefile!\n")
-endif
-	@echo "\n[!] Necessário instalar \"Git\"..."
-	sudo apt install git -y
-endif
-	@echo "\n[!] Baixando módulos..."
-	git submodule update --init
-endif
+# MODULOS:
+# ifeq ($(BIB_ATUALIZAR), 0)
+# ifndef GIT_CHECK
+# ifndef APT_CHECK
+# 	$(error "\nInstale o Git para poder usar esse makefile!\n")
+# endif
+# 	@echo "\n[!] Necessário instalar \"Git\"..."
+# 	sudo apt install git -y
+# endif
+# 	@echo "\n[!] Baixando módulos..."
+# 	git submodule update --init
+# endif
 
 # Instalar o comp-wrapper
 COMPWRAPPER:

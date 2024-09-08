@@ -1,0 +1,26 @@
+v1.4 [20/09/2018]
+- Documentação atualizada;
+- Biblioteca agora funciona por classe.
+
+v1.3 [04/09/2018]
+- Versionamento está diferente, nada mais de updates gigantes de uma vez só;
+- Melhores retornos nas função;
+- "include guard" foi refeito, corretamente;
+- Arquivo de licença adicionado;
+- Melhores explicações para as funções.
+
+v1.2 [28/09/2017]
+- Licença atualizada;
+- Informações adicionadas;
+- Melhorias no cabeçalho;
+- README.md atualizado;
+- geral_pegarPastaCorrente() voltou a retornar valores;
+- Conserto na declaração de geral_existeCharXNaStringY().
+
+v1.1 [10/06/2016]
+- Forte revisão geral nos comentários;
+- Remoção de argumentos inúteis;
+- Removi a função main() de testes.
+
+v1.0 [10/06/2016]
+- Biblioteca separada do meu outro projeto, GMBR DS.

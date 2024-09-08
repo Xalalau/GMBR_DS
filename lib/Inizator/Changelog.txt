@@ -1,0 +1,43 @@
+v1.3.3 [20/09/2018]
+- Código migrado para utilização de uma classe;
+- Documentação e exemplos atualizados;
+- Escrita de imprimir() melhorada.
+
+v1.3.2 [05/09/2018]
+- Melhorias em retornos de função;
+- Conserto de possível overflow.
+
+v1.3.1 [04/09/2018]
+- Submódulo "Geral" largado devido a problemas de compilação no Windows.
+
+v1.3 [04/09/2018]
+- Versionamento está diferente, nada mais de updates gigantes de uma vez só;
+- Texto para processar todas as seções foi renomeado de "QUALQUER_SECAO" para "";
+- Nova função: ini_inserir();
+- Os argumentos foram reorganizados;
+- Corrigido problema ao lidar com entradas de nó nulas;
+- Função ini_buscar() melhorada;
+- Retornos das funções foram melhorados;
+- "include guard" foi refeito, corretamente;
+- Tipo "no" renomeado para "ini";
+- Variáveis renomeadas para fazerem maior sentido;
+- Corrigida possibilidade de overflow em leitura de seções e nomes de parâmetros;
+- Agora o Inizator reclama quando uma seção não é "fechada" até o final de sua linha;
+- Correções na indentação;
+- A função ini_ler() foi dividida em várias outras para facilitar a leitura;
+- Desativei o "caractere de fix" exigido no início dos arquivos;
+- Os exemplos de uso foram atualizados;
+- A biblioteca "Geral" foi linkada como um submódulo.
+
+v1.2 [28/09/2017]
+- Correções no texto;
+- Informações adicionadas;
+
+v1.1 [10/06/2016]
+- Forte revisão geral nos comentários;
+- README.md adicionado;
+- Changelog adicionado;
+- Transformei o main() de testes na função exemplo do README.md.
+
+v1.0 [10/06/2016]
+- Biblioteca separada do meu outro projeto, GMBR DS.

@@ -12,15 +12,16 @@ Programa para instalação de servidores dedicados de Garry's Mod ([Página ofic
 Para compilar no seu sistema, clone o repositório, entre na pasta do projeto e dê build pelo make:
 
 ```sh
-$ git clone https://github.com/xalalau/GMBR_DS.git
-$ cd GMBR_DS
-$ make
+git clone https://github.com/xalalau/GMBR_DS.git
+sudo apt-get install gcc-multilib # Suporte a 32 bits Ubuntu
+cd GMBR_DS
+make
 ````
 
 Mas nós temos uma série de opções para escolher. Veja as combinações de comando para o makefile:
 
 ```sh
-$ make REGRA SYSTEM=VALOR
+make REGRA SYSTEM=VALOR
 ````
 
 REGRA:
@@ -41,7 +42,7 @@ Notas:
 Exemplo:
 
 ```sh
-$ make 64bits SYSTEM=Windows
+make 64bits SYSTEM=Windows
 ````
 Sairá o executável de 64 bits para Windows na pasta "release/bin".
 
