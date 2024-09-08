@@ -6,7 +6,7 @@
  *
  */
 
-#define VERSAO_DS "v.Git" /* Versão ! */
+#define VERSAO_DS "v.2.8.6" /* Versão ! */
 
 #include "../lib/Geral/src/geral.h"
 #include "../lib/Inizator/src/inizator.h"

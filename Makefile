@@ -1,5 +1,5 @@
 # Variáveis
-VERSAO_DO_PROGRAMA = v.Git
+VERSAO_DO_PROGRAMA = v.2.8.6
 
 # Nosso conversor
 WRAPPER = comp-wrapper
