@@ -7,7 +7,7 @@ Programa para instalação de servidores dedicados de Garry's Mod ([Página ofic
 
 ## LINUX
 
-*Testado na base do Ubuntu 18.04*
+*Testado na base do Ubuntu 22.04*
 
 Para compilar no seu sistema, clone o repositório, entre na pasta do projeto e dê build pelo make:
 
