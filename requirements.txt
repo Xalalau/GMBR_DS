@@ -1,0 +1,2 @@
+# Optional but recommended: parse Steam libraryfolders.vdf with a maintained parser.
+vdf
