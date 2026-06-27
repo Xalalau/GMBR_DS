@@ -64,12 +64,10 @@ class SteamLibraryTests(unittest.TestCase):
 
 
 class MountContentsTests(unittest.TestCase):
-    def test_mount_contents_uses_configparser_data(self) -> None:
+    def test_mount_contents_creates_file_and_uses_mount_metadata(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
             mount_cfg = root / "garrysmod" / "cfg" / "mount.cfg"
-            mount_cfg.parent.mkdir(parents=True)
-            mount_cfg.write_text("", encoding="utf-8")
 
             params_parser = configparser.RawConfigParser(interpolation=None)
             params_parser.add_section("Pastas")
@@ -78,7 +76,9 @@ class MountContentsTests(unittest.TestCase):
             contents_parser = configparser.RawConfigParser(interpolation=None)
             contents_parser.add_section("Counter-Strike: Source")
             contents_parser.set("Counter-Strike: Source", "opcao", "1")
+            contents_parser.set("Counter-Strike: Source", "mount", "cstrike")
             contents_parser.set("Counter-Strike: Source", "pasta", str(root / "contents" / "css"))
+            contents_parser.set("Counter-Strike: Source", "subpasta", "cstrike")
 
             app = GmbrDS(base_dir=root)
             app.params = IniFile(root / "cfg.ini", params_parser)
@@ -90,8 +90,8 @@ class MountContentsTests(unittest.TestCase):
             text = mount_cfg.read_text(encoding="utf-8")
 
         self.assertIn('"mountcfg"', text)
-        self.assertIn('"Counter-Strike: Source"', text)
-        self.assertIn("contents", text)
+        self.assertIn('"cstrike"', text)
+        self.assertIn(str(root / "contents" / "css" / "cstrike"), text)
 
 
 if __name__ == "__main__":

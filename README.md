@@ -54,6 +54,17 @@ Para usar uma pasta de configuracao especifica:
 python src/gmbr_ds.py --config-dir caminho/para/cfg
 ```
 
+## Contents
+
+O arquivo `contents.ini` usa estes campos:
+
+- `mount`: chave escrita no `mount.cfg`, como `cstrike`, `tf` ou `dod`.
+- `steam`: pasta base do jogo dentro da biblioteca Steam.
+- `subpasta`: pasta dentro do jogo que contem `gameinfo.txt`; em branco usa a propria pasta base.
+- `opcao`: `1` baixa/atualiza via SteamCMD, `2` monta uma instalacao local do Steam, `3` ignora.
+
+Quando `opcao = 1`, o GMBR DS baixa o content para `pasta_contents/<nome>` e monta `subpasta` dentro desse download. Quando `opcao = 2`, ele procura `steam + subpasta` nas bibliotecas Steam encontradas.
+
 ## Makefile
 
 O `Makefile` agora e apenas um atalho para comandos Python:
